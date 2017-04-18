@@ -40,20 +40,25 @@ public class UtilsEstate
 		
 		
 	}
-	public static void deleteEstateAgent( String estateAgent, Connection connection ) {
-		String name = estateAgent;
-		
-		String sql = "DELETE FROM ESTATE_AGENT WHERE NAME=?";
-		boolean successful;
+	
+	public static void updateEstate( int id, String city, int postalCode, 
+			String street, String streetNo, int squareArea, String estateAgent, Connection connection ) {
+		String sql = "UPDATE ESTATE SET CITY=?, POSTAL_CODE=?,  STREET=?, STREET_NUMBER=?, SQUARE_AREA=?, ESTATE_AGENT=? WHERE ID=?";
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement( sql );
-			preparedStatement.setString( 1, name );
+			preparedStatement.setString( 1, city );
+			preparedStatement.setInt( 2, postalCode );
+			preparedStatement.setString( 3, street );
+			preparedStatement.setString( 4,  streetNo );
+			preparedStatement.setInt( 5, squareArea);
+			preparedStatement.setString( 6, estateAgent );	
+			preparedStatement.setInt( 7, id );
 			preparedStatement.executeUpdate();
-
-
 		} catch ( SQLException e ) {
 			e.printStackTrace();
-		}			
+		}		
+	
 	}
+	
 
 }

@@ -29,7 +29,8 @@ public class MainClass
 			//List<EstateAgent> estateAgents = UtilsEstateAgent.getEstateAgents( connection );
 			//System.out.println(estateAgents.get(1).toString());
 			
-			UtilsEstateAgent.updateEstateAgent( "bla", "foo", "bar", "bar",connection  );
+			UtilsEstate.updateEstate( 1, "Hamburg", 54321, "Examplestreet", "5", 100, "bla", connection  );
+			
 			
 			//Estate e = new Estate( 1, "Hamburg", 12345, "Examplestreet", "5", 100, "bla");
 			//UtilsEstate.createEstate( e, connection );
