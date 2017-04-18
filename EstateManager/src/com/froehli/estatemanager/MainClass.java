@@ -31,8 +31,9 @@ public class MainClass
 			
 			UtilsEstateAgent.updateEstateAgent( "bla", "foo", "bar", "bar",connection  );
 			
-			Estate e = new Estate( 1, "Hamburg", 12345, "Examplestreet", "5", 100, "bla");
-			UtilsEstate.createEstate( e, connection );
+			//Estate e = new Estate( 1, "Hamburg", 12345, "Examplestreet", "5", 100, "bla");
+			//UtilsEstate.createEstate( e, connection );
+			//UtilsEstate.deleteEstate(2, connection);
 			
 			
 		} catch (ClassNotFoundException e){

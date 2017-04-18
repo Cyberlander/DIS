@@ -27,21 +27,33 @@ public class UtilsEstate
 		}
 	}
 	
-	public static void createEstateAgent( EstateAgent estateAgent, Connection connection  ) {
-		String sql = "INSERT INTO ESTATE_AGENT(NAME,ADDRESS,LOGIN,PASSWORD) VALUES (?,?,?,?)";
-		try
-		{
+	public static void deleteEstate( int estateId, Connection connection ){
+		int id = estateId;
+		String sql = "DELETE FROM ESTATE WHERE ID=?";
+		try {
 			PreparedStatement preparedStatement = connection.prepareStatement( sql );
-			preparedStatement.setString(1, estateAgent.getName() );
-			preparedStatement.setString(2, estateAgent.getAddress() );
-			preparedStatement.setString(3, estateAgent.getLogin() );
-			preparedStatement.setString(4, estateAgent.getPassword() );
+			preparedStatement.setInt(1, id );
 			preparedStatement.executeUpdate();
-		} catch (SQLException e)
-		{
+		} catch ( SQLException e ) {
 			e.printStackTrace();
 		}
 		
+		
+	}
+	public static void deleteEstateAgent( String estateAgent, Connection connection ) {
+		String name = estateAgent;
+		
+		String sql = "DELETE FROM ESTATE_AGENT WHERE NAME=?";
+		boolean successful;
+		try {
+			PreparedStatement preparedStatement = connection.prepareStatement( sql );
+			preparedStatement.setString( 1, name );
+			preparedStatement.executeUpdate();
+
+
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}			
 	}
 
 }
