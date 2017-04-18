@@ -32,8 +32,7 @@ public class UtilsEstateAgent
 	
 	public static void createEstateAgent( EstateAgent estateAgent, Connection connection  ) {
 		String sql = "INSERT INTO ESTATE_AGENT(NAME,ADDRESS,LOGIN,PASSWORD) VALUES (?,?,?,?)";
-		try
-		{
+		try{
 			PreparedStatement preparedStatement = connection.prepareStatement( sql );
 			preparedStatement.setString(1, estateAgent.getName() );
 			preparedStatement.setString(2, estateAgent.getAddress() );

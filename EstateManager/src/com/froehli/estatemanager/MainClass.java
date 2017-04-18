@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.froehli.estatemanager.utils.UtilsEstate;
 import com.froehli.estatemanager.utils.UtilsEstateAgent;
 
 public class MainClass
@@ -30,6 +31,8 @@ public class MainClass
 			
 			UtilsEstateAgent.updateEstateAgent( "bla", "foo", "bar", "bar",connection  );
 			
+			Estate e = new Estate( 1, "Hamburg", 12345, "Examplestreet", "5", 100, "bla");
+			UtilsEstate.createEstate( e, connection );
 			
 			
 		} catch (ClassNotFoundException e){
