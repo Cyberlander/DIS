@@ -8,8 +8,10 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 
+import com.froehli.estatemanager.utils.UtilsContract;
 import com.froehli.estatemanager.utils.UtilsEstate;
 import com.froehli.estatemanager.utils.UtilsEstateAgent;
+import com.froehli.estatemanager.utils.UtilsPerson;
 
 public class MainClass
 {
@@ -29,14 +31,14 @@ public class MainClass
 			//List<EstateAgent> estateAgents = UtilsEstateAgent.getEstateAgents( connection );
 			//System.out.println(estateAgents.get(1).toString());
 			
-			UtilsEstate.updateEstate( 1, "Hamburg", 54321, "Examplestreet", "5", 100, "bla", connection  );
-			
-			
+			//UtilsEstate.updateEstate( 1, "Hamburg", 54321, "Examplestreet", "5", 100, "bla", connection  );
+			//UtilsPerson.createPerson( new Person(1, "Froehli", "Felix", "Examplestreet"), connection );
+			//UtilsContract.createContract(new Contract( 1, "19.04.2017", "Hamburg"), connection);
 			//Estate e = new Estate( 1, "Hamburg", 12345, "Examplestreet", "5", 100, "bla");
 			//UtilsEstate.createEstate( e, connection );
 			//UtilsEstate.deleteEstate(2, connection);
-			
-			
+			List<Contract> list = UtilsContract.getContracts(connection);
+			System.out.println( list.get(0).getDate());
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		}
