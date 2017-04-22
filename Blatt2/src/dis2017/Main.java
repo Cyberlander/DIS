@@ -1,6 +1,6 @@
 package dis2017;
 
-import dis2017.data.Makler;
+import dis2017.data.EstateAgent;
 
 /**
  * Hauptklasse
@@ -82,7 +82,7 @@ public class Main {
 	 * eingegeben hat.
 	 */
 	public static void newMakler() {
-		Makler m = new Makler();
+		EstateAgent m = new EstateAgent();
 
 		m.setName(FormUtil.readString("Name"));
 		m.setAddress(FormUtil.readString("Adresse"));
@@ -95,7 +95,7 @@ public class Main {
 
 	public static void updateMakler() {
 		int id = FormUtil.readInt("Makler ID");
-		Makler makler = Makler.load(id);
+		EstateAgent makler = EstateAgent.load(id);
 
 		makler.setName(FormUtil.readString("Name"));
 		makler.setAddress(FormUtil.readString("Adresse"));
@@ -108,7 +108,9 @@ public class Main {
 
 	public static void deleteMakler() {
 		int id = FormUtil.readInt("Makler ID");
-		Makler makler = Makler.load(id);
-		System.out.println(makler.getName());
+		EstateAgent makler = EstateAgent.load(id);
+		makler.delete();
+		
+		System.out.println("Makler mit der ID " + makler.getId() + " wurde gelöscht.");
 	}
 }

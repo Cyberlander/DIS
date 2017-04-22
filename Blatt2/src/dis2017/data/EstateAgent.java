@@ -5,72 +5,74 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import dis2017.data.DB2ConnectionManager;
 
 /**
  * Makler-Bean
  * 
- * Beispiel-Tabelle:
- * CREATE TABLE makler(id INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE) PRIMARY KEY,
- * name varchar(255),
- * address varchar(255),
- * login varchar(40) UNIQUE,
- * password varchar(40));
+ * Beispiel-Tabelle: CREATE TABLE makler(id INTEGER NOT NULL GENERATED ALWAYS AS
+ * IDENTITY (START WITH 1, INCREMENT BY 1, NO CACHE) PRIMARY KEY, name
+ * varchar(255), address varchar(255), login varchar(40) UNIQUE, password
+ * varchar(40));
  */
-public class Makler {
+public class EstateAgent {
 	private int id = -1;
 	private String name;
 	private String address;
 	private String login;
 	private String password;
-	
+
 	public int getId() {
 		return id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
-	
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public String getLogin() {
 		return login;
 	}
-	
+
 	public void setLogin(String login) {
 		this.login = login;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	/**
 	 * Lädt einen Makler aus der Datenbank
-	 * @param id ID des zu ladenden Maklers
+	 * 
+	 * @param id
+	 *            ID des zu ladenden Maklers
 	 * @return Makler-Instanz
 	 */
-	public static Makler load(int id) {
+	public static EstateAgent load(int id) {
 		try {
 			// Hole Verbindung
 			Connection con = DB2ConnectionManager.getInstance().getConnection();
@@ -83,7 +85,7 @@ public class Makler {
 			// Führe Anfrage aus
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
-				Makler ts = new Makler();
+				EstateAgent ts = new EstateAgent();
 				ts.setId(id);
 				ts.setName(rs.getString("name"));
 				ts.setAddress(rs.getString("address"));
@@ -99,10 +101,10 @@ public class Makler {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * Speichert den Makler in der Datenbank. Ist noch keine ID vergeben
-	 * worden, wird die generierte Id von DB2 geholt und dem Model übergeben.
+	 * Speichert den Makler in der Datenbank. Ist noch keine ID vergeben worden,
+	 * wird die generierte Id von DB2 geholt und dem Model übergeben.
 	 */
 	public void save() {
 		// Hole Verbindung
@@ -115,8 +117,7 @@ public class Makler {
 				// damit spC$ter generierte IDs zurC<ckgeliefert werden!
 				String insertSQL = "INSERT INTO makler(name, address, login, password) VALUES (?, ?, ?, ?)";
 
-				PreparedStatement pstmt = con.prepareStatement(insertSQL,
-						Statement.RETURN_GENERATED_KEYS);
+				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
 				// Setze Anfrageparameter und fC<hre Anfrage aus
 				pstmt.setString(1, getName());
@@ -151,5 +152,37 @@ public class Makler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void delete() {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+		String sql = "DELETE FROM ESTATE_AGENT WHERE NAME=?";
+		try {
+			PreparedStatement preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setString(1, getName());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static List<EstateAgent> getEstateAgents() throws SQLException {
+		List<EstateAgent> list = new ArrayList<>();
+		String sql = "SELECT * FROM ESTATE_AGENT";
+
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+		Statement statement = con.createStatement();
+		ResultSet r = statement.executeQuery(sql);
+		while (r.next()) {
+			EstateAgent estateAgent = new EstateAgent();
+			estateAgent.setName(r.getString("NAME"));
+			estateAgent.setAddress(r.getString("ADDRESS"));
+			estateAgent.setLogin(r.getString("LOGIN"));
+			estateAgent.setPassword(r.getString("PASSWORD"));
+
+			list.add(estateAgent);
+		}
+		return list;
 	}
 }
