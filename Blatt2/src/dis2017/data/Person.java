@@ -67,7 +67,7 @@ public class Person {
 				// Setze Anfrage Parameter
 				pstmt.setString(1, getName());
 				pstmt.setString(2, getAddress());
-				pstmt.setInt(5, getId());
+				pstmt.setInt(3, getId());
 				pstmt.executeUpdate();
 
 				pstmt.close();

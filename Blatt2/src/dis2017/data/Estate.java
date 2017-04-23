@@ -136,6 +136,7 @@ public class Estate {
 				pstmt.setString(4, getStreetNumber());
 				pstmt.setInt(5, getSquareArea());
 				pstmt.setInt(6, getEstateAgent().getId());
+				pstmt.setInt(7, getId());
 				pstmt.executeUpdate();
 
 				pstmt.close();
