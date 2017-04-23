@@ -17,11 +17,11 @@ public class Contract {
 		_id = id;
 	}
 
-	private void setDate(String date) {
+	public void setDate(String date) {
 		_date = date;
 	}
 
-	private void setPlace(String place) {
+	public void setPlace(String place) {
 		_place = place;
 	}
 
@@ -75,12 +75,38 @@ public class Contract {
 		}
 	}
 
-	public static List<Contract> getContracts(Connection connection) {
+	public static Contract load(int id) {
+		try {
+			Connection con = DB2ConnectionManager.getInstance().getConnection();
+
+			String selectSQL = "SELECT * FROM contract WHERE id = ?";
+			PreparedStatement pstmt = con.prepareStatement(selectSQL);
+			pstmt.setInt(1, id);
+
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				Contract ts = new Contract();
+				ts.setId(id);
+				ts.setDate(rs.getString("date"));
+				ts.setPlace(rs.getString("place"));
+
+				rs.close();
+				pstmt.close();
+				return ts;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static List<Contract> getContracts() {
 		List<Contract> list = new ArrayList<>();
 		String sql = "SELECT * FROM contract";
 
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
-			Statement statement = connection.createStatement();
+			Statement statement = con.createStatement();
 			ResultSet r = statement.executeQuery(sql);
 			while (r.next()) {
 				Contract contract = new Contract();
@@ -93,5 +119,18 @@ public class Contract {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public void delete() {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+		String sql = "DELETE FROM contract WHERE id=?";
+		try {
+			PreparedStatement preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setInt(1, getId());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

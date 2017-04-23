@@ -79,7 +79,6 @@ public class Estate {
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
 			pstmt.setInt(1, id);
 
-			// Führe Anfrage aus
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				Estate ts = new Estate();
@@ -104,7 +103,6 @@ public class Estate {
 
 	public void save() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
-
 		try {
 			if (getId() == -1) {
 				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?, ?,?,?,?,?,?)";

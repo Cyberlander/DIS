@@ -133,11 +133,9 @@ public class EstateAgent {
 	 * wird die generierte Id von DB2 geholt und dem Model übergeben.
 	 */
 	public void save() {
-		// Hole Verbindung
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 
 		try {
-			// FC<ge neues Element hinzu, wenn das Objekt noch keine ID hat.
 			if (getId() == -1) {
 				// Achtung, hier wird noch ein Parameter mitgegeben,
 				// damit spC$ter generierte IDs zurC<ckgeliefert werden!

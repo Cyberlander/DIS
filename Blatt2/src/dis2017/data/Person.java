@@ -37,21 +37,17 @@ public class Person {
 
 	public void save() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
-
 		try
-
 		{
 			if (getId() == -1) {
 				String insertSQL = "INSERT INTO person(name, address) VALUES (?, ?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
-				// Setze Anfrageparameter und fC<hre Anfrage aus
 				pstmt.setString(1, getName());
 				pstmt.setString(2, getAddress());
 				pstmt.executeUpdate();
 
-				// Hole die Id des engefC<gten Datensatzes
 				ResultSet rs = pstmt.getGeneratedKeys();
 				if (rs.next()) {
 					_id = rs.getInt(1);
@@ -60,11 +56,9 @@ public class Person {
 				rs.close();
 				pstmt.close();
 			} else {
-				// Falls schon eine ID vorhanden ist, mache ein Update...
 				String updateSQL = "UPDATE person SET name = ?, address = ? WHERE id = ?";
 				PreparedStatement pstmt = con.prepareStatement(updateSQL);
 
-				// Setze Anfrage Parameter
 				pstmt.setString(1, getName());
 				pstmt.setString(2, getAddress());
 				pstmt.setInt(3, getId());
@@ -74,8 +68,7 @@ public class Person {
 			}
 		} catch (
 
-		SQLException e)
-		{
+		SQLException e) {
 			e.printStackTrace();
 		}
 	}

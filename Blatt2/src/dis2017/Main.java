@@ -1,44 +1,38 @@
 package dis2017;
 
+import java.util.List;
+
 import javax.naming.AuthenticationException;
 
+import dis2017.data.Contract;
 import dis2017.data.Estate;
 import dis2017.data.EstateAgent;
 
-/**
- * Hauptklasse
- */
 public class Main {
-	/**
-	 * Startet die Anwendung
-	 */
 	public static void main(String[] args) {
 		showMainMenu();
 	}
 
-	/**
-	 * Zeigt das Hauptmenü
-	 */
 	private static void showMainMenu() {
 		final int QUIT = 0;
-		final int MENU_MAKLER = 1;
+		final int MENU_ESTATE_AGENT = 1;
 		final int MENU_ESTATES = 2;
+		final int MENU_CONTRACTS = 3;
 
-		// Erzeuge Menü
 		Menu mainMenu = new Menu("Main menu");
-		mainMenu.addEntry("Estate Agent Management", MENU_MAKLER);
+		mainMenu.addEntry("Estate Agent Management", MENU_ESTATE_AGENT);
 		mainMenu.addEntry("Estate Management", MENU_ESTATES);
+		mainMenu.addEntry("Contracts Management", MENU_CONTRACTS);
 		mainMenu.addEntry("Quit", QUIT);
 
-		// Verarbeite Eingabe
 		while (true) {
 			int response = mainMenu.show();
 
 			switch (response) {
-			case MENU_MAKLER:
+			case MENU_ESTATE_AGENT:
 				boolean authenticated = passwordMenu();
 				if (authenticated) {
-					showMaklerMenu();
+					showEstateAgentMenu();
 				}
 				break;
 			case MENU_ESTATES:
@@ -48,6 +42,9 @@ public class Main {
 				} catch (AuthenticationException e) {
 					System.out.println("Authentication failed");
 				}
+				break;
+			case MENU_CONTRACTS:
+				showContractsMenu();
 				break;
 			case QUIT:
 				return;
@@ -81,35 +78,29 @@ public class Main {
 		return true;
 	}
 
-	/**
-	 * Zeigt die Maklerverwaltung
-	 */
-	private static void showMaklerMenu() {
-		// Menüoptionen
+	private static void showEstateAgentMenu() {
 		final int BACK = 0;
-		final int NEW_MAKLER = 1;
-		final int UPDATE_MAKLER = 2;
-		final int DELETE_MAKLER = 3;
+		final int NEW_ESTATE_AGENT = 1;
+		final int UPDATE_ESTATE_AGENT = 2;
+		final int DELETE_ESTATE_AGENT = 3;
 
-		// Maklerverwaltungsmenü
 		Menu maklerMenu = new Menu("Estate Agent Management");
-		maklerMenu.addEntry("New Agent", NEW_MAKLER);
-		maklerMenu.addEntry("Update Agent", UPDATE_MAKLER);
-		maklerMenu.addEntry("Delete Agent", DELETE_MAKLER);
+		maklerMenu.addEntry("New Agent", NEW_ESTATE_AGENT);
+		maklerMenu.addEntry("Update Agent", UPDATE_ESTATE_AGENT);
+		maklerMenu.addEntry("Delete Agent", DELETE_ESTATE_AGENT);
 		maklerMenu.addEntry("Back to main menu", BACK);
 
-		// Verarbeite Eingabe
 		while (true) {
 			int response = maklerMenu.show();
 
 			switch (response) {
-			case NEW_MAKLER:
+			case NEW_ESTATE_AGENT:
 				newMakler();
 				break;
-			case UPDATE_MAKLER:
+			case UPDATE_ESTATE_AGENT:
 				updateMakler();
 				break;
-			case DELETE_MAKLER:
+			case DELETE_ESTATE_AGENT:
 				deleteMakler();
 				break;
 			case BACK:
@@ -149,16 +140,42 @@ public class Main {
 		}
 	}
 
+	private static void showContractsMenu() {
+		final int BACK = 0;
+		final int SIGN_CONTRACT = 1;
+		final int LIST_CONTRACTS = 2;
+
+		Menu maklerMenu = new Menu("Contract Management");
+		maklerMenu.addEntry("Sign Contract", SIGN_CONTRACT);
+		maklerMenu.addEntry("List Contracts", LIST_CONTRACTS);
+		maklerMenu.addEntry("Back to main menu", BACK);
+
+		while (true) {
+			int response = maklerMenu.show();
+
+			switch (response) {
+			case SIGN_CONTRACT:
+				signContract();
+				break;
+			case LIST_CONTRACTS:
+				listContracts();
+				break;
+			case BACK:
+				return;
+			}
+		}
+	}
+
 	private static void newMakler() {
-		EstateAgent m = new EstateAgent();
+		EstateAgent estateAgent = new EstateAgent();
 
-		m.setName(FormUtil.readString("Name"));
-		m.setAddress(FormUtil.readString("Adresse"));
-		m.setLogin(FormUtil.readString("Login"));
-		m.setPassword(FormUtil.readString("Passwort"));
-		m.save();
+		estateAgent.setName(FormUtil.readString("Name"));
+		estateAgent.setAddress(FormUtil.readString("Address"));
+		estateAgent.setLogin(FormUtil.readString("Login"));
+		estateAgent.setPassword(FormUtil.readString("Password"));
+		estateAgent.save();
 
-		System.out.println("Makler mit der ID " + m.getId() + " wurde erzeugt.");
+		System.out.println("Estate agent with the ID " + estateAgent.getId() + " was created.");
 	}
 
 	private static void updateMakler() {
@@ -168,18 +185,18 @@ public class Main {
 		makler.setName(FormUtil.readString("Name"));
 		makler.setAddress(FormUtil.readString("Adresse"));
 		makler.setLogin(FormUtil.readString("Login"));
-		makler.setPassword(FormUtil.readString("Passwort"));
+		makler.setPassword(FormUtil.readString("Password"));
 		makler.save();
 
-		System.out.println("Makler mit der ID " + makler.getId() + " wurde aktualisiert.");
+		System.out.println("Estate agent with the ID " + makler.getId() + " was updated.");
 	}
 
 	private static void deleteMakler() {
-		int id = FormUtil.readInt("Makler ID");
-		EstateAgent makler = EstateAgent.load(id);
-		makler.delete();
+		int id = FormUtil.readInt("Estate Agent ID");
+		EstateAgent estateAgent = EstateAgent.load(id);
+		estateAgent.delete();
 
-		System.out.println("Makler mit der ID " + makler.getId() + " wurde gelöscht.");
+		System.out.println("Estate agent with the ID " + estateAgent.getId() + " was deleted.");
 	}
 
 	private static void newEstate() {
@@ -211,5 +228,22 @@ public class Main {
 		estate.delete();
 
 		System.out.println("Estate with the id " + estate.getId() + " was deleted.");
+	}
+
+	private static void signContract() {
+		Contract contract = new Contract();
+		contract.setDate(FormUtil.readString("Date"));
+		contract.setPlace(FormUtil.readString("Place"));
+		contract.save();
+
+		System.out.println("Contract with ID " + contract.getId() + " was created.");
+	}
+
+	private static void listContracts() {
+		List<Contract> contracts = Contract.getContracts();
+
+		for (Contract contract : contracts) {
+			System.out.println("ID:" + contract.getId());
+		}
 	}
 }
