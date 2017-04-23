@@ -1,65 +1,162 @@
 package dis2017.data;
 
-public class Estate
-{
-	int _id;
-	String _city;
-	int _postalCode;
-	String _street;
-	String _streetNumber;
-	int _squareArea;
-	String _estateAgent;
-	
-	public Estate() {
-		
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Estate {
+	private int _id;
+	private String _city;
+	private int _postalCode;
+	private String _street;
+	private String _streetNumber;
+	private int _squareArea;
+	private EstateAgent _estateAgent;
+
+	public void setId(int id) {
+		_id = id;
 	}
-	
-	public Estate( int id, String city, int postalCode,
-			String street, String streetNumber, int squareArea, String estateAgent ) {
-			this._id = id;
-			this._city = city;
-			this._postalCode = postalCode;
-			this._street = street;
-			this._streetNumber = streetNumber;
-			this._squareArea = squareArea;
-			this._estateAgent = estateAgent;
+
+	public void setCity(String city) {
+		_city = city;
 	}
-	
-	public Estate( String city, int postalCode,
-					String street, String streetNumber, int squareArea) {
-		this._city = city; 
-		this._postalCode = postalCode;
-		this._street = street;
-		this._streetNumber = streetNumber;
-		this._squareArea = squareArea;
+
+	public void setPostalCode(int code) {
+		_postalCode = code;
 	}
-	
-	public int getID(){
-		return this._id;
+
+	public void setStreet(String street) {
+		_street = street;
 	}
-	
+
+	public void setStreetNumber(String streetNumber) {
+		_streetNumber = streetNumber;
+	}
+
+	public void setSquareArea(int area) {
+		_squareArea = area;
+	}
+
+	public void estateAgent(EstateAgent agent) {
+		_estateAgent = agent;
+	}
+
+	public int getId() {
+		return _id;
+	}
+
 	public String getCity() {
-		return this._city;
+		return _city;
 	}
-	
+
 	public int getPostalCode() {
-		return this._postalCode;
+		return _postalCode;
 	}
-	
+
 	public String getStreet() {
-		return this._street;
+		return _street;
 	}
-	
+
 	public String getStreetNumber() {
-		return this._streetNumber;
+		return _streetNumber;
 	}
-	
+
 	public int getSquareArea() {
-		return this._squareArea;
+		return _squareArea;
 	}
-	
-	public String getEstateAgent() {
-		return this._estateAgent;
+
+	public EstateAgent getEstateAgent() {
+		return _estateAgent;
 	}
-	
+
+	public static Estate load(int id) {
+		try {
+			Connection con = DB2ConnectionManager.getInstance().getConnection();
+
+			String selectSQL = "SELECT * FROM estate WHERE id = ?";
+			PreparedStatement pstmt = con.prepareStatement(selectSQL);
+			pstmt.setInt(1, id);
+
+			// Führe Anfrage aus
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				Estate ts = new Estate();
+				ts.setId(id);
+				ts.setCity(rs.getString("city"));
+				ts.setPostalCode(rs.getInt("postal_code"));
+				ts.setStreet(rs.getString("street"));
+				ts.setStreetNumber(rs.getString("street_number"));
+				ts.setSquareArea(rs.getInt("square_area"));
+
+				// TODO set estate agent
+
+				rs.close();
+				pstmt.close();
+				return ts;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public void save() {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+
+		try {
+			if (getId() == -1) {
+				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?, ?,?,?,?,?,?)";
+
+				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+
+				pstmt.setString(1, getCity());
+				pstmt.setInt(2, getPostalCode());
+				pstmt.setString(3, getStreet());
+				pstmt.setString(4, getStreetNumber());
+				pstmt.setInt(5, getSquareArea());
+				pstmt.setInt(6, getEstateAgent().getId());
+				pstmt.executeUpdate();
+
+				ResultSet rs = pstmt.getGeneratedKeys();
+				if (rs.next()) {
+					_id = rs.getInt(1);
+				}
+
+				rs.close();
+				pstmt.close();
+			} else {
+				String updateSQL = "UPDATE person SET city = ?, postal_code = ?, street = ?, street_number = ?, square_area = ?, estate_agent = ? WHERE id = ?";
+				PreparedStatement pstmt = con.prepareStatement(updateSQL);
+
+				pstmt.setString(1, getCity());
+				pstmt.setInt(2, getPostalCode());
+				pstmt.setString(3, getStreet());
+				pstmt.setString(4, getStreetNumber());
+				pstmt.setInt(5, getSquareArea());
+				pstmt.setInt(6, getEstateAgent().getId());
+				pstmt.executeUpdate();
+
+				pstmt.close();
+			}
+		} catch (
+
+		SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void delete() {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+		String sql = "DELETE FROM estate WHERE id=?";
+		try {
+			PreparedStatement preparedStatement = con.prepareStatement(sql);
+			preparedStatement.setInt(1, getId());
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

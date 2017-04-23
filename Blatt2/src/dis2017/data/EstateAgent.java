@@ -78,7 +78,7 @@ public class EstateAgent {
 			Connection con = DB2ConnectionManager.getInstance().getConnection();
 
 			// Erzeuge Anfrage
-			String selectSQL = "SELECT * FROM makler WHERE id = ?";
+			String selectSQL = "SELECT * FROM estate_agent WHERE id = ?";
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
 			pstmt.setInt(1, id);
 
@@ -115,7 +115,7 @@ public class EstateAgent {
 			if (getId() == -1) {
 				// Achtung, hier wird noch ein Parameter mitgegeben,
 				// damit spC$ter generierte IDs zurC<ckgeliefert werden!
-				String insertSQL = "INSERT INTO makler(name, address, login, password) VALUES (?, ?, ?, ?)";
+				String insertSQL = "INSERT INTO estate_agent(name, address, login, password) VALUES (?, ?, ?, ?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
@@ -156,7 +156,7 @@ public class EstateAgent {
 
 	public void delete() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
-		String sql = "DELETE FROM ESTATE_AGENT WHERE NAME=?";
+		String sql = "DELETE FROM estate_agent WHERE name=?";
 		try {
 			PreparedStatement preparedStatement = con.prepareStatement(sql);
 			preparedStatement.setString(1, getName());
@@ -169,17 +169,17 @@ public class EstateAgent {
 
 	public static List<EstateAgent> getEstateAgents() throws SQLException {
 		List<EstateAgent> list = new ArrayList<>();
-		String sql = "SELECT * FROM ESTATE_AGENT";
+		String sql = "SELECT * FROM estate_agent";
 
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		Statement statement = con.createStatement();
 		ResultSet r = statement.executeQuery(sql);
 		while (r.next()) {
 			EstateAgent estateAgent = new EstateAgent();
-			estateAgent.setName(r.getString("NAME"));
-			estateAgent.setAddress(r.getString("ADDRESS"));
-			estateAgent.setLogin(r.getString("LOGIN"));
-			estateAgent.setPassword(r.getString("PASSWORD"));
+			estateAgent.setName(r.getString("name"));
+			estateAgent.setAddress(r.getString("address"));
+			estateAgent.setLogin(r.getString("login"));
+			estateAgent.setPassword(r.getString("password"));
 
 			list.add(estateAgent);
 		}

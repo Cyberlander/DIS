@@ -75,7 +75,6 @@ public class Person {
 		} catch (
 
 		SQLException e)
-
 		{
 			e.printStackTrace();
 		}
