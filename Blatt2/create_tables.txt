@@ -1,0 +1,79 @@
+VERTICAL PARTITIONING
+
+CREATE TABLE estate_agent (
+	id INTEGER NOT NULL,
+    name VARCHAR(255) NOT NULL, 
+    address VARCHAR(255), 
+    login VARCHAR(255) NOT NULL, 
+    password VARCHAR(255) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE estate ( 
+	id INTEGER NOT NULL,
+	city varchar(255),
+	postal_code INTEGER,
+	street varchar(255),
+	street_number varchar(255),
+	square_area INTEGER,
+	estate_agent INTEGER,
+	PRIMARY KEY(id),
+	CONSTRAINT fk_estate_manager FOREIGN KEY(estate_agent) REFERENCES estate_agent(id)
+); 
+
+CREATE TABLE apartment (
+	id INTEGER NOT NULL,
+	floor INTEGER,
+	rent INTEGER,
+	rooms INTEGER,
+	balcony INTEGER,
+	built_in_kitchen VARCHAR(255),
+	PRIMARY KEY(id),
+	CONSTRAINT fk_apartment_estate FOREIGN KEY(id) REFERENCES estate(id)
+);
+
+CREATE TABLE HOUSE ( 
+	id INTEGER NOT NULL,
+	floor INTEGER,
+	price INTEGER,
+	garden VARCHAR(255),
+	PRIMARY KEY(id),
+	CONSTRAINT fk_house_estate FOREIGN KEY(id) REFERENCES estate(id) 
+);
+
+// GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1)
+CREATE TABLE person (
+	id INTEGER NOT NULL,
+	first_name VARCHAR(255),
+	name VARCHAR(255),
+	address VARCHAR(255),
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE tenancy_contract (
+	contract_no INTEGER NOT NULL PRIMARY KEY,
+	start_date VARCHAR(255),
+	duration VARCHAR(255),
+	additional_costs VARCHAR(255),
+	CONSTRAINT fk_contract_tenancy FOREIGN KEY(contract_no)
+	REFERENCES contract(contract_no) 
+);
+
+CREATE TABLE purchase_contract (
+	contract_no INTEGER NOT NULL,
+	no_of_installments INTEGER,
+	interest_rate VARCHAR(255),
+	PRIMARY KEY(contract_no),
+	CONSTRAINT fk_purchase_contract FOREIGN KEY(contract_no)
+	REFERENCES contract(contract_no)
+);
+
+CREATE TABLE CONTRACT (
+	contract_no INTEGER NOT NULL,
+	date VARCHAR(255),
+	place VARCHAR(255),
+	PRIMARY KEY(contract_no)
+);
+
+INSERT INTO estate_agent (name, address, login, password) 
+VALUES ('Deutschland GP','Deutschland GP', 'Hockenheimring','Deutschland GP');

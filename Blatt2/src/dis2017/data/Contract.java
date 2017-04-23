@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Contract {
-	private int _id = -1;
+	private int _contract_no = -1;
 	private String _date;
 	private String _place;
 
-	private void setId(int id) {
-		_id = id;
+	private void setContractNo(int number) {
+		_contract_no = number;
 	}
 
 	public void setDate(String date) {
@@ -25,8 +25,8 @@ public class Contract {
 		_place = place;
 	}
 
-	public int getId() {
-		return _id;
+	public int getContractNo() {
+		return _contract_no;
 	}
 
 	public String getDate() {
@@ -41,7 +41,7 @@ public class Contract {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 
 		try {
-			if (getId() == -1) {
+			if (getContractNo() == -1) {
 				String insertSQL = "INSERT INTO contract(date, place) VALUES (?, ?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
@@ -52,18 +52,18 @@ public class Contract {
 
 				ResultSet rs = pstmt.getGeneratedKeys();
 				if (rs.next()) {
-					_id = rs.getInt(1);
+					_contract_no = rs.getInt(1);
 				}
 
 				rs.close();
 				pstmt.close();
 			} else {
-				String updateSQL = "UPDATE contract SET date = ?, place = ? WHERE id = ?";
+				String updateSQL = "UPDATE contract SET date = ?, place = ? WHERE contract_no = ?";
 				PreparedStatement pstmt = con.prepareStatement(updateSQL);
 
 				pstmt.setString(1, getDate());
 				pstmt.setString(2, getPlace());
-				pstmt.setInt(3, getId());
+				pstmt.setInt(3, getContractNo());
 				pstmt.executeUpdate();
 
 				pstmt.close();
@@ -73,31 +73,6 @@ public class Contract {
 		SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static Contract load(int id) {
-		try {
-			Connection con = DB2ConnectionManager.getInstance().getConnection();
-
-			String selectSQL = "SELECT * FROM contract WHERE id = ?";
-			PreparedStatement pstmt = con.prepareStatement(selectSQL);
-			pstmt.setInt(1, id);
-
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				Contract ts = new Contract();
-				ts.setId(id);
-				ts.setDate(rs.getString("date"));
-				ts.setPlace(rs.getString("place"));
-
-				rs.close();
-				pstmt.close();
-				return ts;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public static List<Contract> getContracts() {
@@ -110,7 +85,7 @@ public class Contract {
 			ResultSet r = statement.executeQuery(sql);
 			while (r.next()) {
 				Contract contract = new Contract();
-				contract.setId(r.getInt("id"));
+				contract.setContractNo(r.getInt("contract_no"));
 				contract.setDate(r.getString("date"));
 				contract.setPlace(r.getString("place"));
 				list.add(contract);
@@ -123,10 +98,10 @@ public class Contract {
 
 	public void delete() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
-		String sql = "DELETE FROM contract WHERE id=?";
+		String sql = "DELETE FROM contract WHERE contract_no=?";
 		try {
 			PreparedStatement preparedStatement = con.prepareStatement(sql);
-			preparedStatement.setInt(1, getId());
+			preparedStatement.setInt(1, getContractNo());
 			preparedStatement.executeUpdate();
 
 		} catch (SQLException e) {

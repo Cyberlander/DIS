@@ -236,14 +236,14 @@ public class Main {
 		contract.setPlace(FormUtil.readString("Place"));
 		contract.save();
 
-		System.out.println("Contract with ID " + contract.getId() + " was created.");
+		System.out.println("Contract with ID " + contract.getContractNo() + " was created.");
 	}
 
 	private static void listContracts() {
 		List<Contract> contracts = Contract.getContracts();
 
 		for (Contract contract : contracts) {
-			System.out.println("ID:" + contract.getId());
+			System.out.println("ID:" + contract.getContractNo());
 		}
 	}
 }
