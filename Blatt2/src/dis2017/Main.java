@@ -7,6 +7,7 @@ import javax.naming.AuthenticationException;
 import dis2017.data.Contract;
 import dis2017.data.Estate;
 import dis2017.data.EstateAgent;
+import dis2017.data.Person;
 
 public class Main {
 	public static void main(String[] args) {
@@ -142,18 +143,24 @@ public class Main {
 
 	private static void showContractsMenu() {
 		final int BACK = 0;
-		final int SIGN_CONTRACT = 1;
-		final int LIST_CONTRACTS = 2;
+		final int INSERT_PERSON = 1;
+		final int SIGN_CONTRACT = 2;
+		final int LIST_CONTRACTS = 3;
 
 		Menu contractsMenu = new Menu("Contract Management");
+		contractsMenu.addEntry("Insert Person", INSERT_PERSON);
 		contractsMenu.addEntry("Sign Contract", SIGN_CONTRACT);
 		contractsMenu.addEntry("List Contracts", LIST_CONTRACTS);
+		
 		contractsMenu.addEntry("Back to main menu", BACK);
 
 		while (true) {
 			int response = contractsMenu.show();
 
 			switch (response) {
+			case INSERT_PERSON:
+				insertPerson();
+				break;
 			case SIGN_CONTRACT:
 				signContract();
 				break;
@@ -248,5 +255,15 @@ public class Main {
 		for (Contract contract : contracts) {
 			System.out.println("Contract-No: " + contract.getContractNo() + " Place: " + contract.getPlace());
 		}
+	}
+	
+	private static void insertPerson() {
+		Person person = new Person();
+		person.setFirstName(FormUtil.readString("First name"));
+		person.setName(FormUtil.readString("Name"));
+		person.setAddress(FormUtil.readString("Address"));
+		person.save();
+
+		System.out.println("Person with ID " + person.getId() + " was created.");
 	}
 }

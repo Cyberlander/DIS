@@ -12,6 +12,22 @@ public class Person {
 	private String _name;
 	private String _address;
 
+	private void setId(int id) {
+		_id = id;
+	}
+
+	public void setFirstName(String firstName) {
+		_firstName = firstName;
+	}
+
+	public void setName(String name) {
+		_name = name;
+	}
+
+	public void setAddress(String address) {
+		_address = address;
+	}
+
 	public int getId() {
 		return _id;
 	}
