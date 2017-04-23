@@ -102,6 +102,32 @@ public class EstateAgent {
 		return null;
 	}
 
+	public boolean authenticate() {
+		try {
+			Connection con = DB2ConnectionManager.getInstance().getConnection();
+
+			// Erzeuge Anfrage
+			String selectSQL = "SELECT * FROM estate_agent WHERE login = ?, password = ?";
+			PreparedStatement pstmt = con.prepareStatement(selectSQL);
+			pstmt.setString(1, getLogin());
+
+			// Führe Anfrage aus
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				setId(rs.getInt("id"));
+				setName(rs.getString("name"));
+				setAddress(rs.getString("address"));
+
+				rs.close();
+				pstmt.close();
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	/**
 	 * Speichert den Makler in der Datenbank. Ist noch keine ID vergeben worden,
 	 * wird die generierte Id von DB2 geholt und dem Model übergeben.

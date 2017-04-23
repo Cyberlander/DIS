@@ -39,7 +39,7 @@ public class Estate {
 		_squareArea = area;
 	}
 
-	public void estateAgent(EstateAgent agent) {
+	public void setEstateAgent(EstateAgent agent) {
 		_estateAgent = agent;
 	}
 
@@ -89,8 +89,8 @@ public class Estate {
 				ts.setStreet(rs.getString("street"));
 				ts.setStreetNumber(rs.getString("street_number"));
 				ts.setSquareArea(rs.getInt("square_area"));
-
-				// TODO set estate agent
+				int estateAgentId = rs.getInt("estate_agent");
+				ts.setEstateAgent(EstateAgent.load(estateAgentId));
 
 				rs.close();
 				pstmt.close();

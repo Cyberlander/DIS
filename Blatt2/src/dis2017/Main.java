@@ -1,5 +1,7 @@
 package dis2017;
 
+import javax.naming.AuthenticationException;
+
 import dis2017.data.Estate;
 import dis2017.data.EstateAgent;
 
@@ -40,12 +42,33 @@ public class Main {
 				}
 				break;
 			case MENU_ESTATES:
-				showEstateMenu();
+				try {
+					EstateAgent estateAgent = authenticateAgent();
+					showEstateMenu(estateAgent);
+				} catch (AuthenticationException e) {
+					System.out.println("Authentication failed");
+				}
 				break;
 			case QUIT:
 				return;
 			}
 		}
+	}
+
+	private static EstateAgent authenticateAgent() throws AuthenticationException {
+		String login = FormUtil.readString("Login");
+		String password = FormUtil.readString("Password");
+
+		EstateAgent estateAgent = new EstateAgent();
+		estateAgent.setLogin(login);
+		estateAgent.setPassword(password);
+		boolean authenticated = estateAgent.authenticate();
+
+		if (authenticated) {
+			return estateAgent;
+		}
+
+		throw new AuthenticationException();
 	}
 
 	private static boolean passwordMenu() {
@@ -69,7 +92,7 @@ public class Main {
 		final int DELETE_MAKLER = 3;
 
 		// Maklerverwaltungsmenü
-		Menu maklerMenu = new Menu("Esate Agent Management");
+		Menu maklerMenu = new Menu("Estate Agent Management");
 		maklerMenu.addEntry("New Agent", NEW_MAKLER);
 		maklerMenu.addEntry("Update Agent", UPDATE_MAKLER);
 		maklerMenu.addEntry("Delete Agent", DELETE_MAKLER);
@@ -95,7 +118,7 @@ public class Main {
 		}
 	}
 
-	private static void showEstateMenu() {
+	private static void showEstateMenu(EstateAgent agent) {
 		final int BACK = 0;
 		final int NEW_ESTATE = 1;
 		final int UPDATE_ESTATE = 2;

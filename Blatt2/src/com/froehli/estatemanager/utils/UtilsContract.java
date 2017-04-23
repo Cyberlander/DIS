@@ -10,7 +10,6 @@ import java.util.List;
 
 import com.froehli.estatemanager.Contract;
 import com.froehli.estatemanager.EstateAgent;
-import com.froehli.estatemanager.Person;
 
 public class UtilsContract
 {
