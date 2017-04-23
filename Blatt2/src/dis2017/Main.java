@@ -32,12 +32,25 @@ public class Main {
 
 			switch (response) {
 			case MENU_MAKLER:
-				showMaklerMenu();
+				boolean authenticated = passwordMenu();
+				if(authenticated){
+					showMaklerMenu();
+				}
 				break;
 			case QUIT:
 				return;
 			}
 		}
+	}
+
+	private static boolean passwordMenu() {
+		String password = FormUtil.readString("Password");
+		System.out.println(password);
+		if(!password.equals("1234")){
+			System.out.println("Wrong password");
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -110,7 +123,7 @@ public class Main {
 		int id = FormUtil.readInt("Makler ID");
 		EstateAgent makler = EstateAgent.load(id);
 		makler.delete();
-		
+
 		System.out.println("Makler mit der ID " + makler.getId() + " wurde gelöscht.");
 	}
 }
