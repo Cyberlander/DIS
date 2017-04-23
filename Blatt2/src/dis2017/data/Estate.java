@@ -125,7 +125,7 @@ public class Estate {
 				rs.close();
 				pstmt.close();
 			} else {
-				String updateSQL = "UPDATE person SET city = ?, postal_code = ?, street = ?, street_number = ?, square_area = ?, estate_agent = ? WHERE id = ?";
+				String updateSQL = "UPDATE estate SET city = ?, postal_code = ?, street = ?, street_number = ?, square_area = ?, estate_agent = ? WHERE id = ?";
 				PreparedStatement pstmt = con.prepareStatement(updateSQL);
 
 				pstmt.setString(1, getCity());

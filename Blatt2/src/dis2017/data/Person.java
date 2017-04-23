@@ -12,13 +12,6 @@ public class Person {
 	private String _name;
 	private String _address;
 
-	public Person(int id, String firstName, String name, String address) {
-		this._id = id;
-		this._firstName = firstName;
-		this._name = name;
-		this._address = address;
-	}
-
 	public int getId() {
 		return _id;
 	}
@@ -37,8 +30,7 @@ public class Person {
 
 	public void save() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
-		try
-		{
+		try {
 			if (getId() == -1) {
 				String insertSQL = "INSERT INTO person(name, address) VALUES (?, ?)";
 

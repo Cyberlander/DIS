@@ -74,18 +74,16 @@ public class EstateAgent {
 	 */
 	public static EstateAgent load(int id) {
 		try {
-			// Hole Verbindung
 			Connection con = DB2ConnectionManager.getInstance().getConnection();
 
-			// Erzeuge Anfrage
 			String selectSQL = "SELECT * FROM estate_agent WHERE id = ?";
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
 			pstmt.setInt(1, id);
 
-			// Führe Anfrage aus
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				EstateAgent ts = new EstateAgent();
+				System.out.println(id);
 				ts.setId(id);
 				ts.setName(rs.getString("name"));
 				ts.setAddress(rs.getString("address"));
@@ -103,15 +101,13 @@ public class EstateAgent {
 	}
 
 	public boolean authenticate() {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
-			Connection con = DB2ConnectionManager.getInstance().getConnection();
-
-			// Erzeuge Anfrage
 			String selectSQL = "SELECT * FROM estate_agent WHERE login = ?, password = ?";
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
 			pstmt.setString(1, getLogin());
+			pstmt.setString(2, getPassword());
 
-			// Führe Anfrage aus
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				setId(rs.getInt("id"));
@@ -159,11 +155,11 @@ public class EstateAgent {
 				rs.close();
 				pstmt.close();
 			} else {
-				// Falls schon eine ID vorhanden ist, mache ein Update...
-				String updateSQL = "UPDATE makler SET name = ?, address = ?, login = ?, password = ? WHERE id = ?";
+				String updateSQL = "UPDATE estate_agent SET name = ?, address = ?, login = ?, password = ? WHERE id = ?";
 				PreparedStatement pstmt = con.prepareStatement(updateSQL);
+				
+				System.out.println("id: " + getId());
 
-				// Setze Anfrage Parameter
 				pstmt.setString(1, getName());
 				pstmt.setString(2, getAddress());
 				pstmt.setString(3, getLogin());

@@ -84,24 +84,24 @@ public class Main {
 		final int UPDATE_ESTATE_AGENT = 2;
 		final int DELETE_ESTATE_AGENT = 3;
 
-		Menu maklerMenu = new Menu("Estate Agent Management");
-		maklerMenu.addEntry("New Agent", NEW_ESTATE_AGENT);
-		maklerMenu.addEntry("Update Agent", UPDATE_ESTATE_AGENT);
-		maklerMenu.addEntry("Delete Agent", DELETE_ESTATE_AGENT);
-		maklerMenu.addEntry("Back to main menu", BACK);
+		Menu estateAgentMenu = new Menu("Estate Agent Management");
+		estateAgentMenu.addEntry("New Agent", NEW_ESTATE_AGENT);
+		estateAgentMenu.addEntry("Update Agent", UPDATE_ESTATE_AGENT);
+		estateAgentMenu.addEntry("Delete Agent", DELETE_ESTATE_AGENT);
+		estateAgentMenu.addEntry("Back to main menu", BACK);
 
 		while (true) {
-			int response = maklerMenu.show();
+			int response = estateAgentMenu.show();
 
 			switch (response) {
 			case NEW_ESTATE_AGENT:
-				newMakler();
+				newEstateAgent();
 				break;
 			case UPDATE_ESTATE_AGENT:
-				updateMakler();
+				updateEstateAgent();
 				break;
 			case DELETE_ESTATE_AGENT:
-				deleteMakler();
+				deleteEstateAgent();
 				break;
 			case BACK:
 				return;
@@ -145,13 +145,13 @@ public class Main {
 		final int SIGN_CONTRACT = 1;
 		final int LIST_CONTRACTS = 2;
 
-		Menu maklerMenu = new Menu("Contract Management");
-		maklerMenu.addEntry("Sign Contract", SIGN_CONTRACT);
-		maklerMenu.addEntry("List Contracts", LIST_CONTRACTS);
-		maklerMenu.addEntry("Back to main menu", BACK);
+		Menu contractsMenu = new Menu("Contract Management");
+		contractsMenu.addEntry("Sign Contract", SIGN_CONTRACT);
+		contractsMenu.addEntry("List Contracts", LIST_CONTRACTS);
+		contractsMenu.addEntry("Back to main menu", BACK);
 
 		while (true) {
-			int response = maklerMenu.show();
+			int response = contractsMenu.show();
 
 			switch (response) {
 			case SIGN_CONTRACT:
@@ -166,7 +166,7 @@ public class Main {
 		}
 	}
 
-	private static void newMakler() {
+	private static void newEstateAgent() {
 		EstateAgent estateAgent = new EstateAgent();
 
 		estateAgent.setName(FormUtil.readString("Name"));
@@ -178,20 +178,20 @@ public class Main {
 		System.out.println("Estate agent with the ID " + estateAgent.getId() + " was created.");
 	}
 
-	private static void updateMakler() {
-		int id = FormUtil.readInt("Makler ID");
-		EstateAgent makler = EstateAgent.load(id);
+	private static void updateEstateAgent() {
+		int id = FormUtil.readInt("Estate agent ID");
+		EstateAgent estateAgent = EstateAgent.load(id);
 
-		makler.setName(FormUtil.readString("Name"));
-		makler.setAddress(FormUtil.readString("Adresse"));
-		makler.setLogin(FormUtil.readString("Login"));
-		makler.setPassword(FormUtil.readString("Password"));
-		makler.save();
+		estateAgent.setName(FormUtil.readString("Name"));
+		estateAgent.setAddress(FormUtil.readString("Adresse"));
+		estateAgent.setLogin(FormUtil.readString("Login"));
+		estateAgent.setPassword(FormUtil.readString("Password"));
+		estateAgent.save();
 
-		System.out.println("Estate agent with the ID " + makler.getId() + " was updated.");
+		System.out.println("Estate agent with the ID " + estateAgent.getId() + " was updated.");
 	}
 
-	private static void deleteMakler() {
+	private static void deleteEstateAgent() {
 		int id = FormUtil.readInt("Estate Agent ID");
 		EstateAgent estateAgent = EstateAgent.load(id);
 		estateAgent.delete();
