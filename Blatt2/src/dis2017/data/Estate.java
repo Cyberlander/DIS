@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Estate {
-	private int _id;
+	private int _id = -1;
 	private String _city;
 	private int _postalCode;
 	private String _street;
@@ -105,7 +105,7 @@ public class Estate {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
 			if (getId() == -1) {
-				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?, ?,?,?,?,?,?)";
+				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?, ?,?,?,?,?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 

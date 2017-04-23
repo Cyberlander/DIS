@@ -73,8 +73,8 @@ public class EstateAgent {
 	 * @return Makler-Instanz
 	 */
 	public static EstateAgent load(int id) {
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
-			Connection con = DB2ConnectionManager.getInstance().getConnection();
 
 			String selectSQL = "SELECT * FROM estate_agent WHERE id = ?";
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
@@ -103,7 +103,7 @@ public class EstateAgent {
 	public boolean authenticate() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
-			String selectSQL = "SELECT * FROM estate_agent WHERE login = ?, password = ?";
+			String selectSQL = "SELECT * FROM estate_agent WHERE login = ? AND password = ?";
 			PreparedStatement pstmt = con.prepareStatement(selectSQL);
 			pstmt.setString(1, getLogin());
 			pstmt.setString(2, getPassword());

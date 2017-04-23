@@ -126,7 +126,7 @@ public class Main {
 
 			switch (response) {
 			case NEW_ESTATE:
-				newEstate();
+				newEstate(agent);
 				break;
 			case UPDATE_ESTATE:
 				updateEstate();
@@ -199,12 +199,14 @@ public class Main {
 		System.out.println("Estate agent with the ID " + estateAgent.getId() + " was deleted.");
 	}
 
-	private static void newEstate() {
+	private static void newEstate(EstateAgent agent) {
 		Estate estate = new Estate();
 		estate.setCity(FormUtil.readString("City"));
+		estate.setPostalCode(FormUtil.readInt("Postal code"));
 		estate.setStreet(FormUtil.readString("Street"));
 		estate.setStreetNumber(FormUtil.readString("Street Number"));
 		estate.setSquareArea(FormUtil.readInt("Square Area"));
+		estate.setEstateAgent(agent);
 		estate.save();
 
 		System.out.println("Estate with ID " + estate.getId() + " was created.");
@@ -214,6 +216,7 @@ public class Main {
 		int id = FormUtil.readInt("Estate ID");
 		Estate estate = Estate.load(id);
 		estate.setCity(FormUtil.readString("City"));
+		estate.setPostalCode(FormUtil.readInt("Postal code"));
 		estate.setStreet(FormUtil.readString("Street"));
 		estate.setStreetNumber(FormUtil.readString("Street Number"));
 		estate.setSquareArea(FormUtil.readInt("Square Area"));
@@ -243,7 +246,7 @@ public class Main {
 		List<Contract> contracts = Contract.getContracts();
 
 		for (Contract contract : contracts) {
-			System.out.println("ID:" + contract.getContractNo());
+			System.out.println("Contract-No: " + contract.getContractNo() + " Place: " + contract.getPlace());
 		}
 	}
 }
