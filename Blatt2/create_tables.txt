@@ -1,7 +1,7 @@
 VERTICAL PARTITIONING
 
 CREATE TABLE estate_agent (
-	id INTEGER NOT NULL,
+	id INTEGER GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) NOT NULL, 
     address VARCHAR(255), 
     login VARCHAR(255) NOT NULL, 
@@ -10,7 +10,7 @@ CREATE TABLE estate_agent (
 );
 
 CREATE TABLE estate ( 
-	id INTEGER NOT NULL,
+	id INTEGER GENERATED ALWAYS AS IDENTITY,
 	city varchar(255),
 	postal_code INTEGER,
 	street varchar(255),
@@ -22,7 +22,7 @@ CREATE TABLE estate (
 ); 
 
 CREATE TABLE apartment (
-	id INTEGER NOT NULL,
+	id INTEGER GENERATED ALWAYS AS IDENTITY,
 	floor INTEGER,
 	rent INTEGER,
 	rooms INTEGER,
@@ -33,7 +33,7 @@ CREATE TABLE apartment (
 );
 
 CREATE TABLE HOUSE ( 
-	id INTEGER NOT NULL,
+	id INTEGER GENERATED ALWAYS AS IDENTITY,
 	floor INTEGER,
 	price INTEGER,
 	garden VARCHAR(255),
@@ -43,24 +43,32 @@ CREATE TABLE HOUSE (
 
 // GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1)
 CREATE TABLE person (
-	id INTEGER NOT NULL,
+	id INTEGER GENERATED ALWAYS AS IDENTITY,
 	first_name VARCHAR(255),
 	name VARCHAR(255),
 	address VARCHAR(255),
 	PRIMARY KEY(id)
 );
 
+CREATE TABLE contract (
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY,
+	date VARCHAR(255),
+	place VARCHAR(255),
+	PRIMARY KEY(contract_no)
+);
+
 CREATE TABLE tenancy_contract (
-	contract_no INTEGER NOT NULL PRIMARY KEY,
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY,
 	start_date VARCHAR(255),
 	duration VARCHAR(255),
 	additional_costs VARCHAR(255),
+	PRIMARY KEY(contract_no),
 	CONSTRAINT fk_contract_tenancy FOREIGN KEY(contract_no)
 	REFERENCES contract(contract_no) 
 );
 
 CREATE TABLE purchase_contract (
-	contract_no INTEGER NOT NULL,
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY,
 	no_of_installments INTEGER,
 	interest_rate VARCHAR(255),
 	PRIMARY KEY(contract_no),
@@ -68,12 +76,4 @@ CREATE TABLE purchase_contract (
 	REFERENCES contract(contract_no)
 );
 
-CREATE TABLE CONTRACT (
-	contract_no INTEGER NOT NULL,
-	date VARCHAR(255),
-	place VARCHAR(255),
-	PRIMARY KEY(contract_no)
-);
-
-INSERT INTO estate_agent (name, address, login, password) 
-VALUES ('Deutschland GP','Deutschland GP', 'Hockenheimring','Deutschland GP');
+INSERT INTO estate_agent(name,address,login,password) VALUES ('Deutschland GP','Deutschland GP','Hockenheimring','Deutschland GP');

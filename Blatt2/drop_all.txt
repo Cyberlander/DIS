@@ -1,0 +1,7 @@
+DROP TABLE estate;
+DROP TABLE estate_agent;
+DROP TABLE house;
+DROP TABLE contract;
+DROP TABLE tenancy_contract;
+DROP TABLE person;
+DROP TABLE apartment;
