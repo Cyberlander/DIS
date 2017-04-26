@@ -48,12 +48,13 @@ public class Person {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
 			if (getId() == -1) {
-				String insertSQL = "INSERT INTO person(name, address) VALUES (?, ?)";
+				String insertSQL = "INSERT INTO person(first_name, name, address) VALUES (?, ?, ?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
-				pstmt.setString(1, getName());
-				pstmt.setString(2, getAddress());
+				pstmt.setString(1,  getFirstName());
+				pstmt.setString(2, getName());
+				pstmt.setString(3, getAddress());
 				pstmt.executeUpdate();
 
 				ResultSet rs = pstmt.getGeneratedKeys();
@@ -64,11 +65,12 @@ public class Person {
 				rs.close();
 				pstmt.close();
 			} else {
-				String updateSQL = "UPDATE person SET name = ?, address = ? WHERE id = ?";
+				String updateSQL = "UPDATE person SET first_name = ?, name = ?, address = ? WHERE id = ?";
 				PreparedStatement pstmt = con.prepareStatement(updateSQL);
 
-				pstmt.setString(1, getName());
-				pstmt.setString(2, getAddress());
+				pstmt.setString(1,  getFirstName());
+				pstmt.setString(2, getName());
+				pstmt.setString(3, getAddress());
 				pstmt.setInt(3, getId());
 				pstmt.executeUpdate();
 
