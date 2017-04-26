@@ -1,0 +1,68 @@
+CREATE TABLE estate_agent( 
+id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+name varchar(255) NOT NULL,
+address varchar(255), 
+login varchar(255),
+password varchar(255));
+
+CREATE TABLE estate ( 
+	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	postal_code INTEGER,
+	street varchar(255),
+	street_number varchar(255),
+	square_area INTEGER,
+	estate_agent INTEGER,
+	CONSTRAINT fk_estate_manager FOREIGN KEY(estate_agent) REFERENCES estate_agent(id) ON DELETE CASCADE
+); 
+
+CREATE TABLE apartment (
+	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	floor INTEGER,
+	rent INTEGER,
+	rooms INTEGER,
+	balcony INTEGER,
+	built_in_kitchen VARCHAR(255),
+	CONSTRAINT fk_apartment_estate FOREIGN KEY(id) REFERENCES estate(id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE HOUSE ( 
+	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	floor INTEGER,
+	price INTEGER,
+	garden VARCHAR(255),
+	CONSTRAINT fk_house_estate FOREIGN KEY(id) REFERENCES estate(id) ON DELETE CASCADE
+
+);
+
+CREATE TABLE person (
+	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	first_name VARCHAR(255),
+	name VARCHAR(255),
+	address VARCHAR(255)
+);
+
+
+CREATE TABLE contract (
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	date VARCHAR(255),
+	place VARCHAR(255)
+);
+
+CREATE TABLE tenancy_contract (
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	start_date VARCHAR(255),
+	duration VARCHAR(255),
+	additional_costs VARCHAR(255),
+	CONSTRAINT fk_contract_tenancy FOREIGN KEY(contract_no)
+	REFERENCES contract(contract_no) ON DELETE CASCADE
+);
+
+
+CREATE TABLE purchase_contract (
+	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	no_of_installments INTEGER,
+	interest_rate VARCHAR(255),
+	CONSTRAINT fk_purchase_contract FOREIGN KEY(contract_no)
+	REFERENCES contract(contract_no) ON DELETE CASCADE
+);
