@@ -41,6 +41,7 @@ public class Contract {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 
 		try {
+			con.setAutoCommit(false);
 			if (getContractNo() == -1) {
 				String insertSQL = "INSERT INTO contract(date, place) VALUES (?, ?)";
 
