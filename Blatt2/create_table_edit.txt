@@ -7,12 +7,13 @@ password varchar(255));
 
 CREATE TABLE estate ( 
 	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+        city varchar(255),
 	postal_code INTEGER,
 	street varchar(255),
 	street_number varchar(255),
 	square_area INTEGER,
 	estate_agent INTEGER,
-	CONSTRAINT fk_estate_manager FOREIGN KEY(estate_agent) REFERENCES estate_agent(id) ON DELETE CASCADE
+	CONSTRAINT fk_estate_manager FOREIGN KEY(estate_agent) REFERENCES estate_agent(id)
 ); 
 
 CREATE TABLE apartment (
@@ -49,6 +50,8 @@ CREATE TABLE contract (
 	place VARCHAR(255)
 );
 
+
+
 CREATE TABLE tenancy_contract (
 	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
 	start_date VARCHAR(255),
@@ -66,3 +69,21 @@ CREATE TABLE purchase_contract (
 	CONSTRAINT fk_purchase_contract FOREIGN KEY(contract_no)
 	REFERENCES contract(contract_no) ON DELETE CASCADE
 );
+
+CREATE TABLE sells (
+	person INTEGER NOT NULL,
+	purchase_contract INTEGER NOT NULL,
+	house INTEGER NOT NULL,
+	PRIMARY KEY(person, purchase_contract,house),
+	CONSTRAINT fk_person FOREIGN KEY(person) REFERENCES person(id),
+	CONSTRAINT fk_purchase_contract FOREIGN KEY(purchase_contract) REFERENCES purchase_contract(contract_no),
+	CONSTRAINT fk_house FOREIGN KEY(house) REFERENCES HOUSE(id) );
+
+CREATE TABLE rents (
+	person INTEGER NOT NULL,
+	tenancy_contract INTEGER NOT NULL,
+	apartment INTEGER NOT NULL,
+	PRIMARY KEY(person, tenancy_contract,apartment ),
+	CONSTRAINT fk_person FOREIGN KEY(person) REFERENCES person(id),
+	CONSTRAINT fk_tenancy_contract FOREIGN KEY(tenancy_contract) REFERENCES tenancy_contract(contract_no),
+	CONSTRAINT fk_apartment FOREIGN KEY(apartment) REFERENCES apartment(id) );
