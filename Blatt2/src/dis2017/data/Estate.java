@@ -104,8 +104,9 @@ public class Estate {
 	public void save() {
 		Connection con = DB2ConnectionManager.getInstance().getConnection();
 		try {
+			con.setAutoCommit(false);
 			if (getId() == -1) {
-				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?, ?,?,?,?,?)";
+				String insertSQL = "INSERT INTO estate(city,postal_code,street,street_number,square_area,estate_agent) VALUES (?,?,?,?,?,?)";
 
 				PreparedStatement pstmt = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
 
