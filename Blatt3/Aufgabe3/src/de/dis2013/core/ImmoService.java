@@ -106,7 +106,10 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void addMakler(Makler m) {
-		makler.add(m);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( m );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -122,7 +125,10 @@ public class ImmoService {
 	 * @param p Die Person
 	 */
 	public void addPerson(Person p) {
-		personen.add(p);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( p );
+		session.getTransaction().commit();		
 	}
 	
 	/**
@@ -145,7 +151,12 @@ public class ImmoService {
 	 * @param h Das Haus
 	 */
 	public void addHaus(Haus h) {
-		haeuser.add(h);
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( h );
+		session.getTransaction().commit();
+		
 	}
 	
 	/**
@@ -198,7 +209,10 @@ public class ImmoService {
 	 * @param w die Wohnung
 	 */
 	public void addWohnung(Wohnung w) {
-		wohnungen.add(w);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( w );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -390,7 +404,7 @@ public class ImmoService {
 		//Hibernate Session erzeugen
 		Session session = sessionFactory.openSession();
 		
-		session.beginTransaction();
+		
 		
 		Makler m = new Makler();
 		m.setName("Max Mustermann");
@@ -398,12 +412,9 @@ public class ImmoService {
 		m.setLogin("max");
 		m.setPasswort("max");
 		
-		//TODO: Dieser Makler wird im Speicher und der DB gehalten
-		this.addMakler(m);
-		session.save(m);
-		session.getTransaction().commit();
 
-		session.beginTransaction();
+		this.addMakler(m);
+	
 		
 		Person p1 = new Person();
 		p1.setAdresse("Informatikum");
@@ -416,16 +427,9 @@ public class ImmoService {
 		p2.setNachname("Albers");
 		p2.setVorname("Hans");
 		
-		session.save(p1);
-		session.save(p2);
-		
-		//TODO: Diese Personen werden im Speicher und der DB gehalten
 		this.addPerson(p1);
 		this.addPerson(p2);
-		session.getTransaction().commit();
-		
-		//Hibernate Session erzeugen
-		session.beginTransaction();
+
 		Haus h = new Haus();
 		h.setOrt("Hamburg");
 		h.setPlz(22527);
@@ -437,11 +441,7 @@ public class ImmoService {
 		h.setGarten(true);
 		h.setVerwalter(m);
 		
-		session.save(h);
-		
-		//TODO: Dieses Haus wird im Speicher und der DB gehalten
 		this.addHaus(h);
-		session.getTransaction().commit();
 		
 		//Hibernate Session erzeugen
 		session = sessionFactory.openSession();

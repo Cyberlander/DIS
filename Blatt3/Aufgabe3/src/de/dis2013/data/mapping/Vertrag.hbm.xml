@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="de.dis2013.data.Vertrag" abstract="true">
+        <id name="id" column="id">
+            <generator class="increment"/>
+        </id>
+        
+        <property name="vertragsnummer" type="integer" column="vertragsnummer" />
+        <property name="datum" type="date" column="datum"/>
+        <property name="ort" type="string" column="ort" />
+        <many-to-one name="vertragspartner" class="de.dis2013.data.Person" column="vertragspartner" not-null="true" />
+        
+        <union-subclass name="de.dis2013.data.Kaufvertrag" table="kaufvertraege">
+            <property name="anzahlRaten" type="integer" column="anzahl_raten"/>
+            <property name="ratenzins" type="integer" column="ratenzins" />
+            <many-to-one name="haus" class="de.dis2013.data.Haus" column="haus" not-null="true"/>
+        </union-subclass>
+        
+        <union-subclass name="de.dis2013.data.Mietvertrag" table="mietvertraege">
+        	<property name="mietbeginn" type="date" column="mietbeginn" />
+        	<property name="dauer" type="integer" column="dauer"/>
+        	<property name="nebenkosten" type="integer" column="nebenkosten" />
+        	<many-to-one name="wohnung" class="de.dis2013.data.Wohnung" column="wohnung" not-null="true" />        
+        </union-subclass>
+        
+        
+    </class>
+    
+</hibernate-mapping>

@@ -7,6 +7,7 @@
 		<id name="id" column="id">
 			<generator class="increment" />
 		</id>
+		
 		<property name="ort" type="string" column="ort" />
 		<property name="plz" type="integer" column="plz" />
 		<property name="strasse" type="string" column="strasse" />
@@ -19,5 +20,15 @@
 			<property name="kaufpreis" type="integer" column="kaufpreis" />
 			<property name="garten" type="boolean" column="garten" />
 		</union-subclass>
+		
+		<union-subclass name="de.dis2013.data.Wohnung" table="wohnungen">
+		    <property name="stockwerk" type="integer" column="stockwerk" />
+		    <property name="mietpreis" type="integer" column="mietpreis" />
+		    <property name="zimmer" type="integer" column="zimmer" />
+		    <property name="balkon" type="boolean" column="balkon" />
+		    <property name="ebk" type="boolean" column="ebk" />
+		</union-subclass>
+		
+		
 	</class>
 </hibernate-mapping>
