@@ -3,6 +3,7 @@ package de.dis2013.core;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -46,16 +47,11 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerById(int id) {
-		Iterator<Makler> it = makler.iterator();
-		
-		while(it.hasNext()) {
-			Makler m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Makler makler = ( Makler ) session.get( Makler.class , id );
+		session.getTransaction().commit();
+		return makler;
 	}
 	
 	/**
@@ -64,23 +60,22 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerByLogin(String login) {
-		Iterator<Makler> it = makler.iterator();
-		
-		while(it.hasNext()) {
-			Makler m = it.next();
-			
-			if(m.getLogin().equals(login))
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Makler makler = ( Makler ) session.createQuery( "from Makler as makler where login = ?" ).setString( 0, login ).uniqueResult();
+		return makler;
 	}
 	
 	/**
 	 * Gibt alle Makler zurück
 	 */
 	public Set<Makler> getAllMakler() {
-		return makler;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List maklerListe = session.createQuery( "from Makler" ).list();
+		Set maklerSet = new HashSet();
+		maklerSet.addAll( maklerListe );
+		return maklerSet;
 	}
 	
 	/**
@@ -89,16 +84,10 @@ public class ImmoService {
 	 * @return Person mit der ID oder null
 	 */
 	public Person getPersonById(int id) {
-		Iterator<Person> it = personen.iterator();
-		
-		while(it.hasNext()) {
-			Person p = it.next();
-			
-			if(p.getId() == id)
-				return p;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Person person = ( Person ) session.get( Person.class , id );
+		return person;
 	}
 	
 	/**
@@ -117,7 +106,10 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void deleteMakler(Makler m) {
-		makler.remove(m);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( m );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -135,7 +127,12 @@ public class ImmoService {
 	 * Gibt alle Personen zurück
 	 */
 	public Set<Person> getAllPersons() {
-		return personen;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List personenListe = session.createQuery( "from Person" ).list();
+		Set personenSet = new HashSet();
+		personenSet.addAll( personenListe );
+		return personenSet;
 	}
 	
 	/**
@@ -143,7 +140,10 @@ public class ImmoService {
 	 * @param p Die Person
 	 */
 	public void deletePerson(Person p) {
-		personen.remove(p);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( p );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -165,17 +165,12 @@ public class ImmoService {
 	 * @return Alle Häuser, die vom Makler verwaltet werden
 	 */
 	public Set<Haus> getAllHaeuserForMakler(Makler m) {
-		Set<Haus> ret = new HashSet<Haus>();
-		Iterator<Haus> it = haeuser.iterator();
-		
-		while(it.hasNext()) {
-			Haus h = it.next();
-			
-			if(h.getVerwalter().equals(m))
-				ret.add(h);
-		}
-		
-		return ret;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List haeuserListe = session.createQuery( "from Haus as h where h.verwalter = ?" ).setInteger( 0, m.getId() ).list();
+		Set haeuserSet = new HashSet();
+		haeuserSet.addAll( haeuserListe );
+		return haeuserSet;
 	}
 	
 	/**
@@ -184,16 +179,10 @@ public class ImmoService {
 	 * @return Das Haus oder null, falls nicht gefunden
 	 */
 	public Haus getHausById(int id) {
-		Iterator<Haus> it = haeuser.iterator();
-		
-		while(it.hasNext()) {
-			Haus h = it.next();
-			
-			if(h.getId() == id)
-				return h;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Haus haus = ( Haus ) session.get( Haus.class, id );
+		return haus;
 	}
 	
 	/**
@@ -201,7 +190,10 @@ public class ImmoService {
 	 * @param p Das Haus
 	 */
 	public void deleteHouse(Haus h) {
-		haeuser.remove(h);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( h );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -221,17 +213,12 @@ public class ImmoService {
 	 * @return Alle Wohnungen, die vom Makler verwaltet werden
 	 */
 	public Set<Wohnung> getAllWohnungenForMakler(Makler m) {
-		Set<Wohnung> ret = new HashSet<Wohnung>();
-		Iterator<Wohnung> it = wohnungen.iterator();
-		
-		while(it.hasNext()) {
-			Wohnung w = it.next();
-			
-			if(w.getVerwalter().equals(m))
-				ret.add(w);
-		}
-		
-		return ret;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		List wohnungen = session.createQuery( "from Wohnung as w where w.verwalter = ?" ).setInteger( 0, m.getId() ).list();
+		Set wohnungenSet = new HashSet();
+		wohnungenSet.addAll( wohnungen );
+		return wohnungenSet;
 	}
 	
 	/**
@@ -240,16 +227,11 @@ public class ImmoService {
 	 * @return Die Wohnung oder null, falls nicht gefunden
 	 */
 	public Wohnung getWohnungById(int id) {
-		Iterator<Wohnung> it = wohnungen.iterator();
-		
-		while(it.hasNext()) {
-			Wohnung w = it.next();
-			
-			if(w.getId() == id)
-				return w;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Wohnung wohnung = ( Wohnung ) session.get( Wohnung.class, id  );
+		session.getTransaction().commit();
+		return wohnung;
 	}
 	
 	/**
@@ -257,7 +239,10 @@ public class ImmoService {
 	 * @param p Die Wohnung
 	 */
 	public void deleteWohnung(Wohnung w) {
-		wohnungen.remove(w);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( w );
+		session.getTransaction().commit();
 	}
 	
 	
@@ -266,7 +251,10 @@ public class ImmoService {
 	 * @param w Der Mietvertrag
 	 */
 	public void addMietvertrag(Mietvertrag m) {
-		mietvertraege.add(m);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( m );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -274,7 +262,10 @@ public class ImmoService {
 	 * @param w Der Kaufvertrag
 	 */
 	public void addKaufvertrag(Kaufvertrag k) {
-		kaufvertraege.add(k);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.save( k );
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -321,16 +312,10 @@ public class ImmoService {
 	 * @return Der Mietvertrag oder null, falls nicht gefunden
 	 */
 	public Mietvertrag getMietvertragById(int id) {
-		Iterator<Mietvertrag> it = mietvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Mietvertrag m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Mietvertrag mietvertrag = ( Mietvertrag ) session.get( Mietvertrag.class, id );
+		return mietvertrag;
 	}
 	
 	/**
@@ -377,16 +362,10 @@ public class ImmoService {
 	 * @return Der Kaufvertrag oder null, falls nicht gefunden
 	 */
 	public Kaufvertrag getKaufvertragById(int id) {
-		Iterator<Kaufvertrag> it = kaufvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Kaufvertrag k = it.next();
-			
-			if(k.getId() == id)
-				return k;
-		}
-		
-		return null;
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		Kaufvertrag kaufvertrag = ( Kaufvertrag ) session.get( Kaufvertrag.class, id );
+		return kaufvertrag;
 	}
 	
 	/**
@@ -394,7 +373,17 @@ public class ImmoService {
 	 * @param m Der Mietvertrag
 	 */
 	public void deleteMietvertrag(Mietvertrag m) {
-		wohnungen.remove(m);
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( m );
+		session.getTransaction().commit();
+	}
+	
+	public void deleteKaufvertrag( Kaufvertrag k ) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.delete( k );
+		session.getTransaction().commit();		
 	}
 	
 	/**
