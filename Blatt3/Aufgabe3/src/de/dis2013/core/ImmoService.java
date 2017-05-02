@@ -292,8 +292,6 @@ public class ImmoService {
 	public Set<Kaufvertrag> getAllKaufvertraegeForMakler(Makler m) {		
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		//List kaufvertraege = session.createQuery( 
-		//		"select k from Kaufvertrag k, Haus h where k.haus = h and h.verwalter = ? "  ).setInteger(0, m.getId() ).list();
 		List kaufvertraege = session.createQuery( 
 				"select ka from Kaufvertrag as ka, Haus as h where ka.haus = h and h.verwalter = ?" ).setInteger(0, m.getId() ).list();
 		session.getTransaction().commit();		
@@ -320,16 +318,13 @@ public class ImmoService {
 	 * @return Set aus Mietverträgen
 	 */
 	public Set<Mietvertrag> getMietvertragByVerwalter(Makler m) {
-		Set<Mietvertrag> ret = new HashSet<Mietvertrag>();
-		Iterator<Mietvertrag> it = mietvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Mietvertrag mv = it.next();
-			
-			if(mv.getWohnung().getVerwalter().getId() == m.getId())
-				ret.add(mv);
-		}
-		
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		List mietvertraege = session.createQuery( 
+				"select m from Mietvertrag as m, Wohnung as w where m.wohnung = w and w.verwalter = ?" ).setInteger(0,m.getId()).list();
+		session.getTransaction().commit();		
+		Set ret = new HashSet();
+		ret.addAll( mietvertraege );		
 		return ret;
 	}
 	
@@ -339,17 +334,13 @@ public class ImmoService {
 	 * @return Set aus Kaufverträgen
 	 */
 	public Set<Kaufvertrag> getKaufvertragByVerwalter(Makler m) {
-		Set<Kaufvertrag> ret = new HashSet<Kaufvertrag>();
-		Iterator<Kaufvertrag> it = kaufvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Kaufvertrag k = it.next();
-			
-			if(k.getHaus().getVerwalter().getId() == m.getId())
-				ret.add(k);
-		}
-		
-		return ret;
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+		List kaufvertraege = session.createQuery( 
+				"select k from Kaufvertrag as k, Haus as h where k.haus = h and h.verwalter = ?" ).setInteger( 0, m.getId() ).list();		
+		Set kaufvertraegeSet = new HashSet();
+		kaufvertraegeSet.addAll( kaufvertraege );
+		return kaufvertraegeSet;
 	}
 	
 	/**
