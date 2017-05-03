@@ -36,6 +36,7 @@ public class MaklerAuthenticator implements Authenticator {
 		String password = FormUtil.readPassword("Passwort");
 		
 		Makler m = service.getMaklerByLogin(login);
+		System.out.println( "Login: " +m.getLogin());
 		
 		if(m == null)
 			ret = false;

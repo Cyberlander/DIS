@@ -101,6 +101,13 @@ public class ImmoService {
 		session.getTransaction().commit();
 	}
 	
+	public void updateMakler( Makler m ) {		
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( m );
+		session.getTransaction().commit();
+	}
+	
 	/**
 	 * Löscht einen Makler
 	 * @param m Der Makler
@@ -120,6 +127,13 @@ public class ImmoService {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save( p );
+		session.getTransaction().commit();		
+	}
+	
+	public void updatePerson(Person p) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( p );
 		session.getTransaction().commit();		
 	}
 	
@@ -155,6 +169,15 @@ public class ImmoService {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save( h );
+		session.getTransaction().commit();
+		
+	}
+	
+	public void updateHaus(Haus h) {
+		
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( h );
 		session.getTransaction().commit();
 		
 	}
@@ -204,6 +227,13 @@ public class ImmoService {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save( w );
+		session.getTransaction().commit();
+	}
+	
+	public void updateWohnung(Wohnung w) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( w );
 		session.getTransaction().commit();
 	}
 	
@@ -257,6 +287,13 @@ public class ImmoService {
 		session.getTransaction().commit();
 	}
 	
+	public void updateMietvertrag(Mietvertrag m) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( m );
+		session.getTransaction().commit();
+	}
+	
 	/**
 	 * Fügt einen Kaufvertrag hinzu
 	 * @param w Der Kaufvertrag
@@ -265,6 +302,13 @@ public class ImmoService {
 		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		session.save( k );
+		session.getTransaction().commit();
+	}
+	
+	public void updateKaufvertrag(Kaufvertrag k) {
+		Session session = sessionFactory.getCurrentSession();
+		session.beginTransaction();
+		session.update( k );
 		session.getTransaction().commit();
 	}
 	
