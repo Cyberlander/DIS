@@ -15,7 +15,7 @@ CREATE TABLE estate (
 	estate_agent INTEGER,
 	CONSTRAINT fk_estate_manager FOREIGN KEY(estate_agent) REFERENCES estate_agent(id)
 ); 
-
+INSERT INTO HOUSE(id,floor,price) VALUES(1,2,3)
 CREATE TABLE apartment (
 	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
 	floor INTEGER,
@@ -26,9 +26,9 @@ CREATE TABLE apartment (
 	CONSTRAINT fk_apartment_estate FOREIGN KEY(id) REFERENCES estate(id) ON DELETE CASCADE
 
 );
-
+INSERT INTO HOUSE(id,floor,price,garden) 
 CREATE TABLE HOUSE ( 
-	id INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	id INTEGER NOT NULL,
 	floor INTEGER,
 	price INTEGER,
 	garden VARCHAR(255),
@@ -53,7 +53,7 @@ CREATE TABLE contract (
 
 
 CREATE TABLE tenancy_contract (
-	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	contract_no INTEGER NOT NULL,
 	start_date VARCHAR(255),
 	duration VARCHAR(255),
 	additional_costs VARCHAR(255),
@@ -63,11 +63,17 @@ CREATE TABLE tenancy_contract (
 
 
 CREATE TABLE purchase_contract (
-	contract_no INTEGER GENERATED ALWAYS AS IDENTITY ( START WITH 1, INCREMENT BY 1 ) PRIMARY KEY,
+	contract_no INTEGER NOT NULL,
 	no_of_installments INTEGER,
 	interest_rate VARCHAR(255),
+	person INTEGER,
+	house INTEGER,
 	CONSTRAINT fk_purchase_contract FOREIGN KEY(contract_no)
-	REFERENCES contract(contract_no) ON DELETE CASCADE
+	REFERENCES contract(contract_no) ON DELETE CASCADE,
+	CONSTRAINT fk_person  FOREIGN KEY(person)
+	REFERENCES person(id) ON DELETE CASCADE,
+	CONSTRAINT fk_house FOREIGN KEY(house)
+	REFERENCES HOUSE(id) ON DELETE CASCADE
 );
 
 CREATE TABLE sells (
