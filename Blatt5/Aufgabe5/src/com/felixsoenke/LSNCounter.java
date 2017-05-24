@@ -16,7 +16,9 @@ public class LSNCounter
 		return counter;
 	}
 	
-	
+	public static void setValue( int value ){
+		counter = value;
+	}
 	
 	
 }

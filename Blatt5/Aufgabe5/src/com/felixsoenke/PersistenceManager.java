@@ -16,9 +16,11 @@ public class PersistenceManager
 			Database.prepareStructure();
 			
 			
+			
 		} catch ( Throwable e ){
 			throw new RuntimeException( e.getMessage() );
 		}
+		synchronizeLSNCounter();
 		
 	}
 	
@@ -32,14 +34,41 @@ public class PersistenceManager
 	
 	
 	
-	public static void getLSNCounter(){
-		
+	public static void synchronizeLSNCounter(){
+		BufferedReader br = null;
+		int lsn;
+		try {
+			br = new BufferedReader( new InputStreamReader( new FileInputStream( "log/logfile.txt" ) ) );
+			
+			String firstLine = br.readLine();
+			if ( firstLine == null ){
+				LSNCounter.setValue( 0 );
+			} else {
+				String line = null;
+				String lastLine = firstLine;
+				while ( ( line = br.readLine() ) != null){
+					lastLine = line;
+				}
+				String[] entries = lastLine.split( "," );
+				lsn = Integer.parseInt( entries[0] );			
+				LSNCounter.setValue( lsn );
+			}			
+			
+			System.out.println( "Last LSN: " + LSNCounter.getCounter());
+			
+		} catch ( IOException e ){
+			e.printStackTrace();
+		}
 	}
+	
 	
 	public static int beginTransaction() {
 		TransactionIdCounter.increment();
 		int tid = TransactionIdCounter.getCounter();
-		return tid;		
+		LSNCounter.increment();
+		// BOT
+		createLogEntry( LSNCounter.getCounter(), tid, 0, 0 );
+		return tid;	
 	}
 	
 	public static void commit( int taid ){
@@ -51,24 +80,38 @@ public class PersistenceManager
 		
 	}
 	
-	public static void createLogEntry( int lsn, int taid,int PageID,String Redo ) {
-		String path = "/logfile/log.txt";
+	public static void createLogEntry( int lsn, int taid,int PageID,int Redo ) {
+		String path = "log/logfile.txt";
+		String entry = "" + lsn + "," + taid + "," + PageID + "," + Redo;
+		BufferedWriter bw = null;
+		PrintWriter pw = null;
 		
 		File file = new File( path );
 		try
-		{
-			RandomAccessFile raf = new RandomAccessFile( file, "rw");
-			long fileLength = file.length();
-			raf.seek(fileLength);
-			raf.writeByte( lsn );
-			raf.close();
+		{	
+			bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( file, true )));
+			pw = new PrintWriter( bw );
+			//pw.println();
+			pw.println( entry );
+			
 		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				if ( null != bw ) {
+					bw.close();
+				}
+				if ( null != pw ){
+					pw.close();
+				}
+				
+			} catch ( IOException e ){
+				e.printStackTrace();
+			}
 		}
 	}
 	

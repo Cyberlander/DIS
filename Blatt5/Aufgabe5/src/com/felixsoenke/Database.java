@@ -13,8 +13,8 @@ public class Database
 {
 	public static void prepareStructure() {	
 		prepareDirectoryStructure();
+		preparePageFiles();	
 		prepareLogFile();
-		preparePageFiles();		
 	}
 	
 	private static void prepareDirectoryStructure() {		
@@ -40,12 +40,7 @@ public class Database
 				logFile.createNewFile();
 				logFileBr = new BufferedReader( new InputStreamReader( new FileInputStream( logFile )));
 				logFileBw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( logFile )));
-				// is file empty
-				String firstLine = logFileBr.readLine();
-				if ( firstLine == null ){
-					String firstEntry = "00,0,0,0";
-					logFileBw.write( firstEntry );					
-				}
+				
 			} catch ( IOException e ){
 				e.printStackTrace();
 			} finally {
