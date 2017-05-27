@@ -4,13 +4,13 @@ public class Page
 {
 	int _pageId;
 	int _lsn;
-	int _data;
+	String _data;
 	
 	public Page(){
 		
 	}
 	
-	public Page( int pageId, int lsn, int data ) {
+	public Page( int pageId, int lsn, String data ) {
 		this._pageId = pageId;
 		this._lsn = lsn;
 		this._data = data;
@@ -32,11 +32,11 @@ public class Page
 		return this._lsn;
 	}
 	
-	public void setData( int data ){
+	public void setData( String data ){
 		this._data = data;
 	}
 	
-	public int getData(){
+	public String getData(){
 		return this._data;
 	}
 	

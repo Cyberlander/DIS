@@ -16,6 +16,9 @@ public class TransactionIdCounter
 		return counter;
 	}
 	
+	public static synchronized void setValue( int value ) {
+		counter = value;
+	}
 	
 	
 	

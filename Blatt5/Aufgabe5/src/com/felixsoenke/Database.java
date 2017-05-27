@@ -118,7 +118,7 @@ public class Database
 					page = new Page();
 					page.setPageID( Integer.parseInt(entries[0]));
 					page.setLSN( Integer.parseInt( entries[1]));
-					page.setData( Integer.parseInt( entries[2]));
+					page.setData(  entries[2] );
 				}
 				
 			}
