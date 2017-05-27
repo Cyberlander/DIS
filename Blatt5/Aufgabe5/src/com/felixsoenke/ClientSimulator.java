@@ -12,7 +12,7 @@ public class ClientSimulator
 			int startPage = (threadNo * 2) - 1;
 			int secondPage = threadNo * 2;
 			
-			String name = "Client " + i;
+			String name = "Client " + threadNo;
 			threads[i] = new Thread( new Client( name, startPage, secondPage ) );
 			threads[i].start();
 			try

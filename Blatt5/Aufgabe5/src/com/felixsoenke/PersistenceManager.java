@@ -3,6 +3,7 @@ package com.felixsoenke;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.io.*;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.List;
@@ -21,13 +22,14 @@ public class PersistenceManager
 			persistenceManager = new PersistenceManager();
 			buffer = new ConcurrentHashMap<>();
 			Database.prepareStructure();
-			persistenceManager.makeConsistencyCheck();
+			
 			
 			
 			
 		} catch ( Throwable e ){
 			throw new RuntimeException( e.getMessage() );
 		}
+		persistenceManager.makeConsistencyCheck();
 		synchronizeLSNCounter();
 		
 	}
@@ -92,9 +94,9 @@ public class PersistenceManager
 	}
 	
 	public void write( int taid, int pageid, String data ){
-		Page page = loadPageFromDatabaseInBuffer( pageid );
+		Page page = loadPageFromDatabaseInBuffer( taid, pageid );
 		
-		//getInstance().listBufferContent();
+		checkForFullBufferAndEmptyIt();
 		String currentData = page.getData();
 		String newData = data;
 		createLogEntry( taid, page.getPageID(), newData );
@@ -140,9 +142,9 @@ public class PersistenceManager
 	
 	
 	
-	public Page loadPageFromDatabaseInBuffer( int pageid ){
+	public Page loadPageFromDatabaseInBuffer( int taid, int pageid ){
 		Page page = Database.getPageForId( pageid );
-		buffer.put( pageid, page);
+		buffer.put( taid, page);
 		return page;		
 	}
 	
@@ -150,19 +152,62 @@ public class PersistenceManager
 		Database.writePage(pageid, lsn, data);
 	}
 	
-	public static void checkForFullBuffer() {
+	public void checkForFullBufferAndEmptyIt() {
 		if ( buffer.size() > 5 ) {
+			println( "Buffer-Size greater than 5");
+			println( "Writing commited pages to database...");
+			List<LogEntry> commitedWrites = getCommitedWrites();
+			for ( Entry keyValuePair : buffer.entrySet() ){
+				Page p = buffer.get( keyValuePair.getKey() );
+				for ( LogEntry le : commitedWrites ) {
+					if ( p.getLSN() == le.getLSN() && p.getPageID() == le.getPageId() ){
+						println("writing page " + p.getPageID() + " with LSN " + p.getLSN() + " from buffer into database" );
+						writePageinDatabase( p.getPageID(), p.getLSN(), p.getData() );
+						buffer.remove( p.getPageID());
+						
+					}
+					
+				}
+				
+				
+				
+			}
 			
 		}
 	}
 	
 	public void makeConsistencyCheck() {
-		System.out.println( "[Persistence Manager] make consistency check" );
+		println( "make consistency check" );
+
+		List<LogEntry> commitedWrites = getCommitedWrites();
+	
+
+		for ( int i=1; i < 11; i ++ ){
+			Page p1 = loadPageFromDatabaseInBuffer( 0, i );
+			int pageLSN = buffer.get( 0 ).getLSN();
+			for ( LogEntry e : commitedWrites ){
+				if ( pageLSN < e.getLSN() && i == e.getPageId() ){
+					writePageinDatabase( i, e.getLSN(), e.getData() );
+					println( "updating Page " + i );
+				}
+			}
+			buffer.remove( i );
+		}
+		
+		
+	}
+	
+	private List<LogEntry> getCommitedLogEntries() {
 		List<LogEntry> logEntries = getAllLogEntries();
 		List<LogEntry> commits;
-		List<LogEntry> commitedWrites = new ArrayList<>();
-		
 		commits = logEntries.stream().filter( le -> le.getData().equals( "COMMIT" )).collect( Collectors.toList() );
+		return commits;
+	}
+	
+	private List<LogEntry> getCommitedWrites(){
+		List<LogEntry> logEntries = getAllLogEntries();
+		List<LogEntry> commits = getCommitedLogEntries();
+		List<LogEntry> commitedWrites = new ArrayList<>();
 		
 		for ( LogEntry le : logEntries) {
 			for ( LogEntry c : commits ){
@@ -171,22 +216,10 @@ public class PersistenceManager
 				}
 			}
 		}
-		
-		for ( int i=1; i < 11; i ++ ){
-			Page p1 = loadPageFromDatabaseInBuffer( i );
-			int pageLSN = buffer.get( i ).getLSN();
-			for ( LogEntry e : commitedWrites ){
-				if ( pageLSN < e.getLSN() && i == e.getPageId() ){
-					writePageinDatabase( i, e.getLSN(), e.getData() );
-					System.out.println( "[Persistence Manager] updating Page " + i );
-				}
-			}
-		}
-		
-		
+		return commitedWrites;
 	}
 	
-	public static List<LogEntry> getAllLogEntries(){
+	private static List<LogEntry> getAllLogEntries(){
 		List<LogEntry> entries = new ArrayList<>();
 		BufferedReader br = null;
 		try {
@@ -217,13 +250,8 @@ public class PersistenceManager
 		
 	}
 	
-	public void listBufferContent() {
-		System.out.println( "SIZE: " + buffer.size());
-		
-		for ( int i = 0; i < buffer.size(); i ++  ) {
-			Page p = buffer.get(i);
-			System.out.println( "[BUFFER] " + "Page-Id: " +  p.getPageID());
-		}
+	public void println( String text ){
+		System.out.println( "[PERSISTENCE MANAGER] " + text );
 	}
 	
 

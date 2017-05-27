@@ -28,7 +28,7 @@ public class Client implements Runnable
 		writing( taid, _page1, randomNum );
 		sleep( 5000 );
 		writing( taid, _page2, randomNum );
-		sleep( 5000 );
+		sleep( Integer.parseInt( randomNum ) * 10 );
 		commit( taid );
 		
 	}
