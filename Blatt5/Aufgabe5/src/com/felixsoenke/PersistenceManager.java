@@ -156,18 +156,20 @@ public class PersistenceManager
 		if ( buffer.size() > 5 ) {
 			println( "Buffer-Size greater than 5");
 			println( "Writing commited pages to database...");
-			List<LogEntry> commitedWrites = getCommitedWrites();
-			for ( Entry keyValuePair : buffer.entrySet() ){
-				Page p = buffer.get( keyValuePair.getKey() );
-				for ( LogEntry le : commitedWrites ) {
-					if ( p.getLSN() == le.getLSN() && p.getPageID() == le.getPageId() ){
-						println("writing page " + p.getPageID() + " with LSN " + p.getLSN() + " from buffer into database" );
-						writePageinDatabase( p.getPageID(), p.getLSN(), p.getData() );
-						buffer.remove( p.getPageID());
-						
-					}
+			List<LogEntry> commits = getCommitedLogEntries();
+			for ( Entry entry : buffer.entrySet() ){
+				Page page = buffer.get( entry.getKey() );
+				
+				for ( LogEntry le : commits ) {
 					
+					if ( Integer.parseInt(entry.getKey().toString()) == le.getTaid() ){
+						println("transaction " + entry.getKey().toString() + " already commited");
+						println("page " + page.getPageID() + " with LSN " + page.getLSN() + " written to database");
+						writePageinDatabase( page.getPageID(), page.getLSN(), page.getData() );
+					} 
 				}
+				//TODO remove this for testing
+				buffer.remove( entry.getKey() );
 				
 				
 				
@@ -246,9 +248,6 @@ public class PersistenceManager
 	}
 	
 	
-	public static void writeCommitedTransactionsToDatabase() {
-		
-	}
 	
 	public void println( String text ){
 		System.out.println( "[PERSISTENCE MANAGER] " + text );
