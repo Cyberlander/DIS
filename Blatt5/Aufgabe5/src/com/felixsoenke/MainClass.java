@@ -8,7 +8,7 @@ public class MainClass
 		
 		PersistenceManager pm = PersistenceManager.getInstance();
 		
-		ClientSimulator.start();
+		//ClientSimulator.start();
 		
 	}
 

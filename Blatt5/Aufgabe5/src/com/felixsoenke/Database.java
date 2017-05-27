@@ -135,4 +135,25 @@ public class Database
 		}
 		return page;
 	}
+	
+	public static void writePage( int pageId, int lsn, String data ){
+		BufferedWriter bw = null;
+		String path = "pages/" + pageId + ".txt";
+		String entry = "" + pageId + "," + lsn + "," + data; 
+		
+		try {
+			bw = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( path )));
+			bw.write( entry );
+		} catch ( IOException e ){
+			
+		} finally {
+			try {
+				if ( null != bw ){
+					bw.close();
+				}
+			} catch ( IOException e ){
+				
+			}
+		}
+	}
 }

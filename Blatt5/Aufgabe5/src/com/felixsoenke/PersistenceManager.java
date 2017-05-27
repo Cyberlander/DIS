@@ -21,7 +21,7 @@ public class PersistenceManager
 			persistenceManager = new PersistenceManager();
 			buffer = new ConcurrentHashMap<>();
 			Database.prepareStructure();
-			makeConsistencyCheck();
+			persistenceManager.makeConsistencyCheck();
 			
 			
 			
@@ -92,7 +92,7 @@ public class PersistenceManager
 	}
 	
 	public void write( int taid, int pageid, String data ){
-		Page page = loadPageFromDatabaseInBuffer( taid, pageid );
+		Page page = loadPageFromDatabaseInBuffer( pageid );
 		
 		//getInstance().listBufferContent();
 		String currentData = page.getData();
@@ -141,11 +141,14 @@ public class PersistenceManager
 	
 	
 	
-	public static Page loadPageFromDatabaseInBuffer(int taid, int pageid ){
+	public Page loadPageFromDatabaseInBuffer( int pageid ){
 		Page page = Database.getPageForId( pageid );
-		buffer.put( taid, page);
-		return page;
-		
+		buffer.put( pageid, page);
+		return page;		
+	}
+	
+	public void writePageinDatabase( int pageid, int lsn, String data ){
+		Database.writePage(pageid, lsn, data);
 	}
 	
 	public static void checkForFullBuffer() {
@@ -154,7 +157,7 @@ public class PersistenceManager
 		}
 	}
 	
-	public static void makeConsistencyCheck() {
+	public void makeConsistencyCheck() {
 		System.out.println( "[Persistence Manager] make consistency check" );
 		List<LogEntry> logEntries = getAllLogEntries();
 		List<LogEntry> commits;
@@ -170,10 +173,17 @@ public class PersistenceManager
 			}
 		}
 		
-		for ( LogEntry cw : commitedWrites ){
-			System.out.println( "LSN: " + cw.getLSN());
-			System.out.println( "DATA: " + cw.getData());
+		for ( int i=1; i < 11; i ++ ){
+			Page p1 = loadPageFromDatabaseInBuffer( i );
+			int pageLSN = buffer.get( i ).getLSN();
+			System.out.println( "LSN: " + pageLSN );
+			for ( LogEntry e : commitedWrites ){
+				if ( pageLSN < e.getLSN() && i == e.getPageId() ){
+					writePageinDatabase( i, e.getLSN(), e.getData() );
+				}
+			}
 		}
+		
 		
 	}
 	
