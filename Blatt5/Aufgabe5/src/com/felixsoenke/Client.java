@@ -1,12 +1,18 @@
 package com.felixsoenke;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Client implements Runnable
 {
 	String _name;
+	int _page1;
+	int _page2;
 	PersistenceManager pm;
 	
-	public Client( String name ){
+	public Client( String name,int page1,int page2 ){
 		this._name = name;
+		this._page1 = page1;
+		this._page2 = page2;
 	}
 
 	@Override
@@ -16,8 +22,13 @@ public class Client implements Runnable
 		pm = PersistenceManager.getInstance();
 		
 		int taid = pm.beginTransaction();
-		sleep( 1000 );
-		writing( taid, 5, "8" );
+		
+		String randomNum = "" +  ThreadLocalRandom.current().nextInt( 0, 10 );
+		
+		writing( taid, _page1, randomNum );
+		sleep( 5000 );
+		writing( taid, _page2, randomNum );
+		sleep( 5000 );
 		commit( taid );
 		
 	}

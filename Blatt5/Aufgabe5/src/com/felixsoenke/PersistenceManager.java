@@ -96,7 +96,6 @@ public class PersistenceManager
 		
 		//getInstance().listBufferContent();
 		String currentData = page.getData();
-		System.out.println("Current page data: " + currentData );
 		String newData = data;
 		createLogEntry( taid, page.getPageID(), newData );
 		
@@ -176,10 +175,10 @@ public class PersistenceManager
 		for ( int i=1; i < 11; i ++ ){
 			Page p1 = loadPageFromDatabaseInBuffer( i );
 			int pageLSN = buffer.get( i ).getLSN();
-			System.out.println( "LSN: " + pageLSN );
 			for ( LogEntry e : commitedWrites ){
 				if ( pageLSN < e.getLSN() && i == e.getPageId() ){
 					writePageinDatabase( i, e.getLSN(), e.getData() );
+					System.out.println( "[Persistence Manager] updating Page " + i );
 				}
 			}
 		}
