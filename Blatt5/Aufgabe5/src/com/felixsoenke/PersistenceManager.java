@@ -1,6 +1,7 @@
 package com.felixsoenke;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.io.*;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -154,11 +155,26 @@ public class PersistenceManager
 	}
 	
 	public static void makeConsistencyCheck() {
-		System.out.println( "[Persistence Manager] make consistency check");
+		System.out.println( "[Persistence Manager] make consistency check" );
 		List<LogEntry> logEntries = getAllLogEntries();
-		for ( LogEntry le : logEntries ){
-			
+		List<LogEntry> commits;
+		List<LogEntry> commitedWrites = new ArrayList<>();
+		
+		commits = logEntries.stream().filter( le -> le.getData().equals( "COMMIT" )).collect( Collectors.toList() );
+		
+		for ( LogEntry le : logEntries) {
+			for ( LogEntry c : commits ){
+				if ( le.getTaid() == c.getTaid() && le.getPageId() != 0 ){
+					commitedWrites.add( le );
+				}
+			}
 		}
+		
+		for ( LogEntry cw : commitedWrites ){
+			System.out.println( "LSN: " + cw.getLSN());
+			System.out.println( "DATA: " + cw.getData());
+		}
+		
 	}
 	
 	public static List<LogEntry> getAllLogEntries(){
