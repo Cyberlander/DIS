@@ -25,7 +25,6 @@ public class CSVReader {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				String[] column = line.split(splitChar);
-				System.out.println("Shop " + column[1]);
 				rows.add(column);
 			}
 		} catch (FileNotFoundException e) {
