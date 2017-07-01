@@ -55,7 +55,7 @@ public class ETLService {
 
 	public void uploadData() {
 		Warehouse warehouse = new Warehouse();
-		// TODO upload data
+		warehouse.uploadFacts(_facts);
 	}
 	
 	private Article findArticle(String name) {
