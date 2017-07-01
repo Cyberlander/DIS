@@ -12,7 +12,12 @@ public class ETLService {
 	}
 	
 	
-	public void importDatabase() throws SQLException {
-		List<Article> articles = Article.allArticles();
+	public void importDatabase() {
+		try {
+			List<Article> articles = Article.allArticles();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
