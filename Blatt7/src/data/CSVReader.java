@@ -1,8 +1,10 @@
 package data;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,11 +24,17 @@ public class CSVReader {
 		BufferedReader reader = null;
 			
 		try {
-			reader = new BufferedReader(new FileReader(path));
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(path), "ISO-8859-1"));
 			String line;
+			int lineNum = 0;
 			while ((line = reader.readLine()) != null) {
+				if (lineNum == 0) {
+					lineNum++;
+					continue;
+				}
 				String[] column = line.split(splitChar);
 				columns.add(column);
+				lineNum++;
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

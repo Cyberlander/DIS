@@ -70,12 +70,6 @@ public class Article {
                 name = rs.getString("NAME");
                 price = rs.getFloat("PREIS");
 
-                System.out.println(articleID);
-                System.out.println(productGroupID);
-                System.out.println(name);
-                System.out.println(price);
-                System.out.println("");
-
                 Article article = new Article();
                 article.setID(articleID);
                 article.setName(name);
