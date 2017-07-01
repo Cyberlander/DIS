@@ -11,15 +11,15 @@ import data.DB2ConnectionManager;
 
 public class Region {
 	private int _id;
-	private int _landid;
+	private int _countryId;
 	private String _name;
 
 	public void setId(int id) {
 		_id = id;
 	}
 
-	public void setLandId(int id) {
-		_landid = id;
+	public void setCountryId(int id) {
+		_countryId = id;
 	}
 
 	public void setName(String name) {
@@ -31,7 +31,7 @@ public class Region {
 	}
 
 	public int getCountryId() {
-		return _landid;
+		return _countryId;
 	}
 
 	public String getName() {
@@ -54,13 +54,13 @@ public class Region {
 			ResultSet rs = pstmt.executeQuery();
 
 			while (rs.next()) {
-				regionId = rs.getInt("LANDID");
+				regionId = rs.getInt("REGIONID");
 				landId = rs.getInt("LANDID");
 				name = rs.getString("NAME");
 
 				Region land = new Region();
 				land.setId(regionId);
-				land.setLandId(landId);
+				land.setCountryId(landId);
 				land.setName(name);
 				result.add(land);
 			}

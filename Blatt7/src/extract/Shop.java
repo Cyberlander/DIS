@@ -30,7 +30,7 @@ public class Shop {
 		return _id;
 	}
 
-	public int getCountryId() {
+	public int getCityId() {
 		return _cityId;
 	}
 

@@ -34,7 +34,7 @@ public class ProductFamily {
 		return _name;
 	}
 
-	public int getProductFamilyId() {
+	public int getProductCategoryId() {
 		return _productCategoryId;
 	}
 
