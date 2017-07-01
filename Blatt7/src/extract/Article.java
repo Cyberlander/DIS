@@ -14,19 +14,19 @@ public class Article {
 	private String _name;
 	private float _price;
 	private int _productGroupID;
-	
+
 	public void setID(int id) {
 		_id = id;
 	}
-	
+
 	public void setName(String name) {
 		_name = name;
 	}
-	
+
 	public void setPrice(float price) {
 		_price = price;
 	}
-	
+
 	public void setProductGroupID(int id) {
 		_productGroupID = id;
 	}
@@ -34,59 +34,58 @@ public class Article {
 	public int getID() {
 		return _id;
 	}
-	
+
 	public String getName() {
 		return _name;
 	}
-	
+
 	public float getPrice() {
 		return _price;
 	}
-	
+
 	public int getProductGroupID() {
 		return _productGroupID;
 	}
-	
-	
+
 	public static List<Article> allArticles() throws SQLException {
-        Connection con = DB2ConnectionManager.getInstance().getConnection();
-        PreparedStatement pstmt = null;
-        String query = "SELECT * FROM DB2INST1.ARTICLEID";
+		Connection con = DB2ConnectionManager.getInstance().getConnection();
+		PreparedStatement pstmt = null;
+		String query = "SELECT * FROM DB2INST1.ARTICLEID";
 
-        int articleID;
-        int productGroupID;
-        String name;
-        float price;
+		int articleID;
+		int productGroupID;
+		String name;
+		float price;
 
-        List<Article> result = new ArrayList<Article>();
+		List<Article> result = new ArrayList<>();
 
-        try {
-            pstmt = con.prepareStatement(query);
-            ResultSet rs = pstmt.executeQuery();
+		try {
+			pstmt = con.prepareStatement(query);
+			ResultSet rs = pstmt.executeQuery();
 
-            while (rs.next()) {
-                articleID = rs.getInt("ARTICLEID");
-                productGroupID = rs.getInt("PRODUCTGROUPID");
-                name = rs.getString("NAME");
-                price = rs.getFloat("PREIS");
+			while (rs.next()) {
+				articleID = rs.getInt("ARTICLEID");
+				productGroupID = rs.getInt("PRODUCTGROUPID");
+				name = rs.getString("NAME");
+				price = rs.getFloat("PREIS");
 
-                Article article = new Article();
-                article.setID(articleID);
-                article.setName(name);
-                article.setProductGroupID(productGroupID);
-                article.setPrice(price);
-                result.add(article);
-            }
+				Article article = new Article();
+				article.setID(articleID);
+				article.setName(name);
+				article.setProductGroupID(productGroupID);
+				article.setPrice(price);
+				result.add(article);
+			}
 
-            pstmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (pstmt != null) {
-                pstmt.close();
-            }
-        }
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				pstmt.close();
+			}
+		}
 
-        return result;
-    }
+		return result;
+	}
 }
