@@ -127,6 +127,7 @@ public class ETLService {
 			fact.setCityId(cityId);
 			fact.setDate(date);
 			fact.setUnitsSold(soldUnits);
+			fact.setVolume(volume);
 
 			_facts.add(fact);
 		}

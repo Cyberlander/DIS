@@ -14,6 +14,7 @@ public class Fact {
 	private int _cityId;
 
 	private int _unitsSold;
+	private float _volume;
 	private Date _date;
 
 	public void setArticleId(int id) {
@@ -55,6 +56,10 @@ public class Fact {
 	public void setUnitsSold(int units) {
 		_unitsSold = units;
 	}
+	
+	public void setVolume(float volume) {
+		_volume = volume;
+	}
 
 	public int getArticleId() {
 		return _articleId;
@@ -94,5 +99,9 @@ public class Fact {
 
 	public int getUnitsSold() {
 		return _unitsSold;
+	}
+	
+	public float getVolume() {
+		return _volume;
 	}
 }
