@@ -9,7 +9,7 @@ public class DataWarehouseWriter
 	public static Connection getConnection() {
 		Connection connection = null;
 		try {
-			connection = DriverManager.getConnection( "",
+			connection = DriverManager.getConnection( "jdbc:db2://vsisls4.informatik.uni-hamburg.de:50001/VSISP",
 					"",
 					"");
 			
@@ -325,7 +325,7 @@ public class DataWarehouseWriter
 		int i_psTableLandId = 0;
 		for ( LandIdTable.Entry entry : landIdTable.getEntryList() ){
 			psTableLandId.setInt( 1, entry.getId() );
-			psTableLandId.setString( 3, entry.getName() );
+			psTableLandId.setString( 2, entry.getName() );
 			psTableLandId.addBatch();
 			i_psTableLandId++;
 			if ( i_psTableLandId %1000 == 0 || i_psTableLandId == landIdTable.getEntryList().size() ){
@@ -411,8 +411,11 @@ public class DataWarehouseWriter
 			
 			for ( ShopIdTable.Entry shopIdTableEntry : shopIdTable.getEntryList() ) {
 				if ( shopIdTableEntry.getName().equals( csvEntry.getShop() ) ){
+					
 					factTableEntry.setShopId( shopIdTableEntry.getId() );
 					factTableEntry.setStadtId( shopIdTableEntry.getStadtId() );
+					System.out.println( "Shop-Id: " + shopIdTableEntry.getId() );
+					System.out.println( "Stadt-Id: " + shopIdTableEntry.getStadtId() );
 				}
 			}
 			for ( StadtIdTable.Entry stadtIdTableEntry : stadtIdTable.getEntryList() ){
@@ -432,6 +435,7 @@ public class DataWarehouseWriter
 		}
 		
 		// print merged data
+		/*
 		for ( FactTable.Entry entry : factTable.getEntryList() ){
 			System.out.println("-------------------------------------------------------------------");
 			System.out.println("TAID:    " + entry.getTaid() + " Article-Id: " + entry.getArticleId()
@@ -441,10 +445,32 @@ public class DataWarehouseWriter
 			System.out.println("              Shop-Id: " + entry.getShopid() 
 					+ " Stadt-Id: " + entry.getStadtId() + " Region-Id: " + entry.getRegionId() 
 					+ " Land-Id: " + entry.getLandId() + " Sales: " + entry.getSales() );
-		}
+		} */
+		
 		return factTable;
 	}
 	
+	public static void fillFactTable( FactTable factTable, Connection connection ) throws SQLException{
+		PreparedStatement ps = connection.prepareStatement( "INSERT INTO THE_FACT_TABLE("
+				+ "TAID,ARTICLE_ID,PRODUCT_GROUP_ID,PRODUCT_FAMILY_ID, PRODUCT_CATEGORY_ID,"
+				+ "SHOP_ID,STADT_ID,REGION_ID,LAND_ID,SALES) "
+				+ "VALUES(?,?,?,?,?,?,?,?,?,?)" );
+		
+		for ( FactTable.Entry entry : factTable.getEntryList() ){
+			ps.setInt(1, entry.getTaid() );
+			ps.setInt(2, entry.getArticleId());
+			ps.setInt(3, entry.getProductGroupId());
+			ps.setInt(4, entry.getProductFamilyId());
+			ps.setInt(5, entry.getProductCategoryId());
+			ps.setInt(6, entry.getShopid());
+			ps.setInt(7,  entry.getStadtId() );
+			ps.setInt(8,  entry.getRegionId() );
+			ps.setInt(9, entry.getLandId() );
+			ps.setDouble( 10, entry.getSales() );
+			ps.addBatch();
+		}
+		ps.executeBatch();		
+	}
 	
 
 }

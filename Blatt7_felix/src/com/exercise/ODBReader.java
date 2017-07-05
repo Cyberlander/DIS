@@ -13,7 +13,7 @@ public class ODBReader
 			e.printStackTrace();
 		}
 		try { 
-		connection = DriverManager.getConnection( "",
+		connection = DriverManager.getConnection( "jdbc:db2://vsisls4.informatik.uni-hamburg.de:50001/VSISP",
 				"",
 				"");
 		} catch ( SQLException ex ){

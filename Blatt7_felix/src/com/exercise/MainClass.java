@@ -27,28 +27,32 @@ public class MainClass
 		Connection wareHouseConnection = DataWarehouseWriter.getConnection();
 		
 		// DataWarehouseWriter.createTables( wareHouseConnection );
+		
+		FactTable factTable = DataWarehouseWriter.combineData( entries,
+				articleIdTable,
+				productGroupIdTable,
+				productFamilyIdTable,
+				productCategoryIdTable,
+				shopIdTable,
+				stadtIdTable,
+				regionIdTable,
+				landIdTable );
 
 		
+		/*
 		try {
 			
-			DataWarehouseWriter.fillDimensionTablesArticle(articleIdTable, productGroupIdTable, productFamilyIdTable, productCategoryIdTable, wareHouseConnection);
-			DataWarehouseWriter.fillDimensionTablesShop(shopIdTable, stadtIdTable, regionIdTable, landIdTable, wareHouseConnection);
-			DataWarehouseWriter.fillTransactionsTable( entries, connection );
+			//DataWarehouseWriter.fillDimensionTablesArticle(articleIdTable, productGroupIdTable, productFamilyIdTable, productCategoryIdTable, wareHouseConnection);
+			//DataWarehouseWriter.fillDimensionTablesShop(shopIdTable, stadtIdTable, regionIdTable, landIdTable, wareHouseConnection);
+			//DataWarehouseWriter.fillTransactionsTable( entries, connection );
+			//DataWarehouseWriter.fillFactTable( factTable, connection );
 			
 		} catch ( SQLException e ){
 			e.printStackTrace();
-		} 
+		} */
 		
 		
-		FactTable factTable = DataWarehouseWriter.combineData( entries,
-										articleIdTable,
-										productGroupIdTable,
-										productFamilyIdTable,
-										productCategoryIdTable,
-										shopIdTable,
-										stadtIdTable,
-										regionIdTable,
-										landIdTable );
+
 		
 
 		
