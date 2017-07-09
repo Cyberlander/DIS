@@ -18,7 +18,7 @@ public class Apriori {
 
 	private void runApriori(List<int[]> initialItemSets) {
 		List<int[]> itemSets = createItemSetsOfSizeOne();
-		
+
 		while (itemSets.size() > 0) {
 			itemSets = frequentItemSets(initialItemSets, itemSets);
 
@@ -31,9 +31,9 @@ public class Apriori {
 	private List<int[]> createItemSetsOfSizeOne() {
 		List<int[]> itemSets = new ArrayList<int[]>();
 		for (int i = 0; i < _numItems; i++) {
-			itemSets.add(new int[] {i});
+			itemSets.add(new int[] { i });
 		}
-		
+
 		return itemSets;
 	}
 
@@ -119,11 +119,13 @@ public class Apriori {
 
 		for (int i = 0; i < previousItemSet.size(); i++) {
 			if ((count[i] / (double) (numTransactions)) >= _minSup) {
-				System.out.println(Arrays.toString(previousItemSet.get(i)) + "  (" + ((count[i] / (double) numTransactions))
-						+ " " + count[i] + ")");
+				System.out.println(Arrays.toString(previousItemSet.get(i)) + "  ("
+						+ ((count[i] / (double) numTransactions)) + " " + count[i] + ")");
 				frequentCandidates.add(previousItemSet.get(i));
 			}
 		}
+		System.out.println("Found " + frequentCandidates.size() + " frequent sets with length "
+				+ frequentCandidates.get(0).length + " and minsup of " + _minSup + "\n");
 
 		return frequentCandidates;
 	}
